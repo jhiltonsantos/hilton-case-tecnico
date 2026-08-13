@@ -1,0 +1,26 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "bundler",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "strict": false,
+    "paths": {
+      "@frontend/auth": ["./auth/src/index.ts"],
+      "@frontend/data-access": ["./data-access/src/index.ts"],
+      "@frontend/ui": ["./ui/src/index.ts"],
+      "@frontend/feature-coordenador": ["./feature-coordenador/src/index.ts"],
+      "@frontend/feature-aluno": ["./feature-aluno/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

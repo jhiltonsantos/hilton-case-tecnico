@@ -1,0 +1,2 @@
+-- V1__baseline.sql
+-- Baseline vazia
