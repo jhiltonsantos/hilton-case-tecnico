@@ -12,5 +12,63 @@
         "description": "Coordenador de curso, cria e gerencia matrizes curriculares"
       }
     ]
-  }
+  },
+  "users": [
+    {
+      "id": "50000000-0000-0000-0000-000000000001",
+      "username": "aluno1",
+      "enabled": true,
+      "credentials": [{ "type": "password", "value": "aluno123", "temporary": false }],
+      "realmRoles": ["ALUNO"]
+    },
+    {
+      "id": "50000000-0000-0000-0000-000000000002",
+      "username": "aluno2",
+      "enabled": true,
+      "credentials": [{ "type": "password", "value": "aluno123", "temporary": false }],
+      "realmRoles": ["ALUNO"]
+    },
+    {
+      "id": "50000000-0000-0000-0000-000000000003",
+      "username": "aluno3",
+      "enabled": true,
+      "credentials": [{ "type": "password", "value": "aluno123", "temporary": false }],
+      "realmRoles": ["ALUNO"]
+    },
+    {
+      "id": "50000000-0000-0000-0000-000000000004",
+      "username": "aluno4",
+      "enabled": true,
+      "credentials": [{ "type": "password", "value": "aluno123", "temporary": false }],
+      "realmRoles": ["ALUNO"]
+    },
+    {
+      "id": "50000000-0000-0000-0000-000000000005",
+      "username": "aluno5",
+      "enabled": true,
+      "credentials": [{ "type": "password", "value": "aluno123", "temporary": false }],
+      "realmRoles": ["ALUNO"]
+    },
+    {
+      "id": "60000000-0000-0000-0000-000000000001",
+      "username": "coordenador1",
+      "enabled": true,
+      "credentials": [{ "type": "password", "value": "coord123", "temporary": false }],
+      "realmRoles": ["COORDENADOR"]
+    },
+    {
+      "id": "60000000-0000-0000-0000-000000000002",
+      "username": "coordenador2",
+      "enabled": true,
+      "credentials": [{ "type": "password", "value": "coord123", "temporary": false }],
+      "realmRoles": ["COORDENADOR"]
+    },
+    {
+      "id": "60000000-0000-0000-0000-000000000003",
+      "username": "coordenador3",
+      "enabled": true,
+      "credentials": [{ "type": "password", "value": "coord123", "temporary": false }],
+      "realmRoles": ["COORDENADOR"]
+    }
+  ]
 }
