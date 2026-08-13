@@ -6,4 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped
 import java.util.UUID
 
 @ApplicationScoped
-class AulaCursoAutorizadoRepository : PanacheRepositoryBase<AulaCursoAutorizado, UUID>
+class AulaCursoAutorizadoRepository : PanacheRepositoryBase<AulaCursoAutorizado, UUID> {
+    fun aulaIdsPorCurso(cursoId: UUID): List<UUID> =
+    find("cursoId", cursoId).list().mapNotNull { it.aulaMatrizId }
+}
