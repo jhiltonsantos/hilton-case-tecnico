@@ -17,7 +17,7 @@ class AulaMatriz(
     var vagasMaximas: Int,
     var vagasOcupadas: Int = 0,
     var ativo: Boolean = true,
-) : PanacheEntityBase() {
+) : PanacheEntityBase {
 
     @Id
     @UuidGenerator

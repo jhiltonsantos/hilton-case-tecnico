@@ -12,7 +12,7 @@ import java.util.UUID
 class AulaCursoAutorizado(
     var aulaMatrizId: UUID,
     var cursoId: UUID,
-) : PanacheEntityBase() {
+) : PanacheEntityBase {
 
     @Id
     @UuidGenerator

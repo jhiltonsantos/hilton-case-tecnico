@@ -20,7 +20,7 @@ class Matricula(
     @Enumerated(EnumType.STRING)
     var status: StatusMatricula = StatusMatricula.ATIVA,
     var criadoEm: OffsetDateTime = OffsetDateTime.now(),
-) : PanacheEntityBase() {
+) : PanacheEntityBase {
 
     @Id
     @UuidGenerator
