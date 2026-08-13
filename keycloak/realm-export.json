@@ -1,0 +1,16 @@
+{
+  "realm": "matricula",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "ALUNO",
+        "description": "Aluno matriculado, realiza matricula em aulas do proprio curso"
+      },
+      {
+        "name": "COORDENADOR",
+        "description": "Coordenador de curso, cria e gerencia matrizes curriculares"
+      }
+    ]
+  }
+}
