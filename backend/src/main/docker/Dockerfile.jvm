@@ -1,11 +1,9 @@
 ####
-# This Dockerfile is used in order to build a container that runs the Quarkus application in JVM mode
+# This Dockerfile builds the Quarkus application from source in a build stage
+# (so `docker compose up --build` alone is enough, no separate `./gradlew build`
+# needed on the host), then copies the built artifacts into a lean JVM runtime image.
 #
-# Before building the container image run:
-#
-# ./gradlew build
-#
-# Then, build the image with:
+# Build the image with:
 #
 # docker build -f src/main/docker/Dockerfile.jvm -t quarkus/backend-jvm .
 #
@@ -80,16 +78,21 @@
 # You can find more information about the UBI base runtime images and their configuration here:
 # https://rh-openjdk.github.io/redhat-openjdk-containers/
 ###
+FROM eclipse-temurin:21-jdk AS build
+WORKDIR /workspace
+COPY . .
+RUN chmod +x gradlew && ./gradlew build -x test --no-daemon
+
 FROM registry.access.redhat.com/ubi9/openjdk-21-runtime:1.24
 
 ENV LANGUAGE='en_US:en'
 
 
 # We make four distinct layers so if there are application changes the library layers can be re-used
-COPY --chown=185 build/quarkus-app/lib/ /deployments/lib/
-COPY --chown=185 build/quarkus-app/*.jar /deployments/
-COPY --chown=185 build/quarkus-app/app/ /deployments/app/
-COPY --chown=185 build/quarkus-app/quarkus/ /deployments/quarkus/
+COPY --from=build --chown=185 /workspace/build/quarkus-app/lib/ /deployments/lib/
+COPY --from=build --chown=185 /workspace/build/quarkus-app/*.jar /deployments/
+COPY --from=build --chown=185 /workspace/build/quarkus-app/app/ /deployments/app/
+COPY --from=build --chown=185 /workspace/build/quarkus-app/quarkus/ /deployments/quarkus/
 
 EXPOSE 8080
 USER 185
