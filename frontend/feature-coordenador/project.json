@@ -1,0 +1,34 @@
+{
+  "name": "feature-coordenador",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "feature-coordenador/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "project": "feature-coordenador/ng-package.json",
+        "tsConfig": "feature-coordenador/tsconfig.lib.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "feature-coordenador/tsconfig.lib.prod.json"
+        },
+        "development": {}
+      }
+    },
+    "test": {
+      "executor": "@nx/angular:unit-test",
+      "options": {
+        "watch": false
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
