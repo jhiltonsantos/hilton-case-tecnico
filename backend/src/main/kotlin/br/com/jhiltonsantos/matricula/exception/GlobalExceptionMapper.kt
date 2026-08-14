@@ -9,7 +9,6 @@ import jakarta.ws.rs.ext.Provider
 
 @Provider
 class GlobalExceptionMapper : ExceptionMapper<Exception> {
-
     override fun toResponse(exception: Exception): Response = when (exception) {
         is EntidadeNaoEncontradaException ->
             Response.status(Response.Status.NOT_FOUND).entity(ErroResponse(exception.message)).build()
