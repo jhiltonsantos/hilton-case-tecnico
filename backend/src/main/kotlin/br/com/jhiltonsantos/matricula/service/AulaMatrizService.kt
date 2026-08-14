@@ -9,14 +9,18 @@ import br.com.jhiltonsantos.matricula.domain.exception.CursoNaoEncontradoExcepti
 import br.com.jhiltonsantos.matricula.domain.exception.DisciplinaNaoEncontradaException
 import br.com.jhiltonsantos.matricula.domain.exception.HorarioNaoEncontradoException
 import br.com.jhiltonsantos.matricula.domain.exception.ProfessorNaoEncontradoException
+import br.com.jhiltonsantos.matricula.domain.exception.AcessoNegadoException
+
 import br.com.jhiltonsantos.matricula.dto.AtualizarAulaRequest
 import br.com.jhiltonsantos.matricula.dto.CriarAulaRequest
+
 import br.com.jhiltonsantos.matricula.repository.AulaCursoAutorizadoRepository
 import br.com.jhiltonsantos.matricula.repository.AulaMatrizRepository
 import br.com.jhiltonsantos.matricula.repository.CursoRepository
 import br.com.jhiltonsantos.matricula.repository.DisciplinaRepository
 import br.com.jhiltonsantos.matricula.repository.HorarioRepository
 import br.com.jhiltonsantos.matricula.repository.ProfessorRepository
+
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.transaction.Transactional
 import java.time.LocalTime
@@ -31,9 +35,8 @@ class AulaMatrizService(
     private val horarioRepository: HorarioRepository,
     private val cursoRepository: CursoRepository,
 ) {
-
     @Transactional
-    fun criar(request: CriarAulaRequest): AulaMatriz {
+    fun criar(request: CriarAulaRequest, coordenadorId: UUID): AulaMatriz {
         disciplinaRepository.findById(request.disciplinaId)
             ?: throw DisciplinaNaoEncontradaException(request.disciplinaId)
         professorRepository.findById(request.professorId)
@@ -48,7 +51,7 @@ class AulaMatrizService(
             disciplinaId = request.disciplinaId,
             professorId = request.professorId,
             horarioId = request.horarioId,
-            coordenadorId = request.coordenadorId,
+            coordenadorId = coordenadorId,
             vagasMaximas = request.vagasMaximas,
         )
         aulaMatrizRepository.persist(aula)
@@ -58,8 +61,11 @@ class AulaMatrizService(
     }
 
     @Transactional
-    fun editar(id: UUID, request: AtualizarAulaRequest): AulaMatriz {
+    fun editar(id: UUID, coordenadorId: UUID, request: AtualizarAulaRequest): AulaMatriz {
         val aula = aulaMatrizRepository.findByIdAtivo(id) ?: throw AulaNaoEncontradaException(id)
+        if (aula.coordenadorId != coordenadorId) {
+            throw AcessoNegadoException("Aula nao pertence a este coordenador")
+        }
 
         professorRepository.findById(request.professorId)
             ?: throw ProfessorNaoEncontradoException(request.professorId)
@@ -79,8 +85,11 @@ class AulaMatrizService(
     }
 
     @Transactional
-    fun excluir(id: UUID) {
+    fun excluir(id: UUID, coordenadorId: UUID) {
         val aula = aulaMatrizRepository.findByIdAtivo(id) ?: throw AulaNaoEncontradaException(id)
+        if (aula.coordenadorId != coordenadorId) {
+            throw AcessoNegadoException("Aula nao pertence a este coordenador")
+        }
         if (!aula.podeSerExcluida()) throw AulaComMatriculadosException(id)
         aula.ativo = false
     }
@@ -91,6 +100,7 @@ class AulaMatrizService(
         horarioFim: LocalTime?,
         cursoId: UUID?,
         vagasMaximas: Int?,
+        coordenadorId: UUID?,
     ): List<AulaMatriz> {
         val horarioIds = when {
             periodoDia != null -> horarioRepository.idsPorPeriodo(periodoDia)
@@ -99,7 +109,7 @@ class AulaMatrizService(
         }
         val aulaIds = cursoId?.let { aulaCursoAutorizadoRepository.aulaIdsPorCurso(it) }
 
-        return aulaMatrizRepository.buscar(horarioIds, aulaIds, vagasMaximas)
+        return aulaMatrizRepository.buscar(horarioIds, aulaIds, vagasMaximas, coordenadorId)
     }
 
     fun cursosAutorizadosDe(aulaId: UUID): List<UUID> =

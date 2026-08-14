@@ -18,6 +18,11 @@
       "id": "50000000-0000-0000-0000-000000000001",
       "username": "aluno1",
       "enabled": true,
+      "emailVerified": true,
+      "requiredActions": [],
+      "firstName": "Ana",
+      "lastName": "Silva",
+      "email": "aluno1@matricula.local",
       "credentials": [{ "type": "password", "value": "aluno123", "temporary": false }],
       "realmRoles": ["ALUNO"]
     },
@@ -25,6 +30,11 @@
       "id": "50000000-0000-0000-0000-000000000002",
       "username": "aluno2",
       "enabled": true,
+      "emailVerified": true,
+      "requiredActions": [],
+      "firstName": "Bruno",
+      "lastName": "Costa",
+      "email": "aluno2@matricula.local",
       "credentials": [{ "type": "password", "value": "aluno123", "temporary": false }],
       "realmRoles": ["ALUNO"]
     },
@@ -32,6 +42,11 @@
       "id": "50000000-0000-0000-0000-000000000003",
       "username": "aluno3",
       "enabled": true,
+      "emailVerified": true,
+      "requiredActions": [],
+      "firstName": "Carla",
+      "lastName": "Souza",
+      "email": "aluno3@matricula.local",
       "credentials": [{ "type": "password", "value": "aluno123", "temporary": false }],
       "realmRoles": ["ALUNO"]
     },
@@ -39,6 +54,11 @@
       "id": "50000000-0000-0000-0000-000000000004",
       "username": "aluno4",
       "enabled": true,
+      "emailVerified": true,
+      "requiredActions": [],
+      "firstName": "Diego",
+      "lastName": "Lima",
+      "email": "aluno4@matricula.local",
       "credentials": [{ "type": "password", "value": "aluno123", "temporary": false }],
       "realmRoles": ["ALUNO"]
     },
@@ -46,6 +66,11 @@
       "id": "50000000-0000-0000-0000-000000000005",
       "username": "aluno5",
       "enabled": true,
+      "emailVerified": true,
+      "requiredActions": [],
+      "firstName": "Elisa",
+      "lastName": "Rocha",
+      "email": "aluno5@matricula.local",
       "credentials": [{ "type": "password", "value": "aluno123", "temporary": false }],
       "realmRoles": ["ALUNO"]
     },
@@ -53,6 +78,11 @@
       "id": "60000000-0000-0000-0000-000000000001",
       "username": "coordenador1",
       "enabled": true,
+      "emailVerified": true,
+      "requiredActions": [],
+      "firstName": "Fernando",
+      "lastName": "Alves",
+      "email": "coordenador1@matricula.local",
       "credentials": [{ "type": "password", "value": "coord123", "temporary": false }],
       "realmRoles": ["COORDENADOR"]
     },
@@ -60,6 +90,11 @@
       "id": "60000000-0000-0000-0000-000000000002",
       "username": "coordenador2",
       "enabled": true,
+      "emailVerified": true,
+      "requiredActions": [],
+      "firstName": "Gabriela",
+      "lastName": "Nunes",
+      "email": "coordenador2@matricula.local",
       "credentials": [{ "type": "password", "value": "coord123", "temporary": false }],
       "realmRoles": ["COORDENADOR"]
     },
@@ -67,8 +102,24 @@
       "id": "60000000-0000-0000-0000-000000000003",
       "username": "coordenador3",
       "enabled": true,
+      "emailVerified": true,
+      "requiredActions": [],
+      "firstName": "Henrique",
+      "lastName": "Dias",
+      "email": "coordenador3@matricula.local",
       "credentials": [{ "type": "password", "value": "coord123", "temporary": false }],
       "realmRoles": ["COORDENADOR"]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "matricula-app",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "redirectUris": ["*"],
+      "webOrigins": ["*"]
     }
   ]
 }
