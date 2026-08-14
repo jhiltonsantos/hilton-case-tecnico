@@ -1,7 +1,7 @@
 <p-toast />
 <p-confirmdialog />
 
-<div class="flex items-center justify-between">
+<div class="cabecalho">
   <h1>Minhas aulas</h1>
   <p-button label="Nova aula" icon="pi pi-plus" (onClick)="abrirNovaAula()" />
 </div>
@@ -34,7 +34,7 @@
 </p-table>
 
 <p-dialog [(visible)]="dialogAberto" [modal]="true" [header]="aulaEmEdicao() ? 'Editar aula' : 'Nova aula'">
-  <form [formGroup]="form" (ngSubmit)="salvar()" class="flex flex-col gap-3">
+  <form [formGroup]="form" (ngSubmit)="salvar()" class="form-aula">
     @if (!aulaEmEdicao()) {
       <p-select formControlName="disciplinaId" [options]="disciplinas()" optionLabel="nome" optionValue="id" placeholder="Disciplina" />
     }

@@ -1,0 +1,16 @@
+<div class="home">
+  @if (keycloak.authenticated) {
+    <p class="saudacao">Logado como {{ keycloak.tokenParsed?.['preferred_username'] }}</p>
+    <nav class="nav-areas">
+      @if (hasRole('COORDENADOR')) {
+        <a routerLink="/coordenador" class="botao-nav">Área do coordenador</a>
+      }
+      @if (hasRole('ALUNO')) {
+        <a routerLink="/aluno" class="botao-nav">Área do aluno</a>
+      }
+    </nav>
+    <button (click)="logout()" class="botao-secundario">Sair</button>
+  } @else {
+    <button (click)="login()" class="botao-primario">Entrar</button>
+  }
+</div>

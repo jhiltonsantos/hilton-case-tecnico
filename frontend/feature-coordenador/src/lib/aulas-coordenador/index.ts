@@ -28,7 +28,8 @@ import { Aula, AulaService, CatalogoService, Curso, Disciplina, Horario, Profess
     ToastModule,
   ],
   providers: [ConfirmationService, MessageService],
-  templateUrl: './aulas-coordenador.html',
+  templateUrl: './template.html',
+  styleUrl: './style.scss',
 })
 export class AulasCoordenador implements OnInit {
   private readonly aulaService = inject(AulaService);
