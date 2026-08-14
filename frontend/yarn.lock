@@ -2475,6 +2475,7 @@ __metadata:
     "@nx/web": "npm:23.1.1"
     "@nx/workspace": "npm:23.1.1"
     "@playwright/test": "npm:^1.37.0"
+    "@primeuix/themes": "npm:^3.0.0"
     "@schematics/angular": "npm:~22.0.4"
     "@swc/helpers": "npm:~0.5.18"
     "@typescript-eslint/utils": "npm:^8.58.0"
@@ -4272,6 +4273,15 @@ __metadata:
   dependencies:
     "@primeuix/styled": "npm:^1.0.0"
   checksum: 10c0/95f405c3e179e33f4468d8602af5bc1b2728fd4708df1e67f4d04354468dc513b84f2fc33d79c13d0c321cb13633350f74b9c6845da26956ac5592aaf508623e
+  languageName: node
+  linkType: hard
+
+"@primeuix/themes@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@primeuix/themes@npm:3.0.0"
+  dependencies:
+    "@primeuix/styled": "npm:^1.0.0"
+  checksum: 10c0/4a009021f865c6580e534486b48a0fc18bf186681bf57def3655ae30cd5237fe9c77b31497d2ad3303f3a788c5f89fb34667c311f9e90e97332ae3b5c7bd15d1
   languageName: node
   linkType: hard
 
