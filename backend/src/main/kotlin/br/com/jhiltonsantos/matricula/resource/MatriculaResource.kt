@@ -16,6 +16,8 @@ import java.util.UUID
 @Path("/matriculas")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Tag(name = "Matriculas", description = "Matricula do aluno em aulas da matriz curricular")
+@SecurityRequirement(name = "bearerAuth")
 @RolesAllowed("ALUNO")
 class MatriculaResource(
     private val matriculaService: MatriculaService,
@@ -25,12 +27,28 @@ class MatriculaResource(
     @Inject
     lateinit var jwt: JsonWebToken
 
+    @Operation(
+        summary = "Matricula o aluno logado em uma aula",
+        description = "Valida curso, ausencia de problema de horario com outras matriculas ativas do aluno, e vaga disponivel.",
+    )
+    @APIResponses(
+        APIResponse(responseCode = "201", description = "Matricula criada"),
+        APIResponse(responseCode = "404", description = "Aula ou aluno inexistente"),
+        APIResponse(responseCode = "422", description = "Curso nao autorizado, choque de horario ou vaga indisponivel"),
+        APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
+        APIResponse(responseCode = "403", description = "Token sem role ALUNO"),
+    )
     @POST
     fun matricular(request: MatricularRequest): Response {
         val matricula = matriculaService.matricular(UUID.fromString(jwt.subject), request)
         return Response.status(Response.Status.CREATED).entity(paraResponse(matricula)).build()
     }
 
+    @Operation(
+        summary = "Lista as matriculas ativas do aluno logado",
+        description = "Retorna disciplina, professor e horario de cada aula em que o aluno esta matriculado.",
+    )
+    @APIResponse(responseCode = "200", description = "Lista de matriculas ativas")
     @GET
     fun minhasMatriculas(): List<MatriculaResponse> =
         matriculaService.minhasMatriculas(UUID.fromString(jwt.subject)).map { paraResponse(it) }
