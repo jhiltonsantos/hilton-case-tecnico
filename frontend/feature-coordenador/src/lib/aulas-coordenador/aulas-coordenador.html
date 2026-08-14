@@ -1,5 +1,5 @@
 <p-toast />
-<p-confirmDialog />
+<p-confirmdialog />
 
 <div class="flex items-center justify-between">
   <h1>Minhas aulas</h1>
@@ -40,9 +40,9 @@
     }
     <p-select formControlName="professorId" [options]="professores()" optionLabel="nome" optionValue="id" placeholder="Professor" />
     <p-select formControlName="horarioId" [options]="horarios()" optionLabel="diaSemana" optionValue="id" placeholder="Horário" />
-    <p-multiSelect formControlName="cursosAutorizados" [options]="cursos()" optionLabel="nome" optionValue="id" placeholder="Cursos autorizados" />
+    <p-multiselect formControlName="cursosAutorizados" [options]="cursos()" optionLabel="nome" optionValue="id" placeholder="Cursos autorizados" />
     @if (!aulaEmEdicao()) {
-      <p-inputNumber formControlName="vagasMaximas" [min]="1" placeholder="Vagas máximas" />
+      <p-inputnumber formControlName="vagasMaximas" [min]="1" placeholder="Vagas máximas" />
     }
     <p-button type="submit" label="Salvar" [disabled]="form.invalid" />
   </form>
