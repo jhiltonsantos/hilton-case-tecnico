@@ -1,0 +1,22 @@
+package br.com.jhiltonsantos.matricula.resource
+
+import jakarta.ws.rs.core.Application
+import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition
+import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType
+import org.eclipse.microprofile.openapi.annotations.info.Info
+import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme
+
+@OpenAPIDefinition(
+    info = Info(
+        title = "API de Matricula e Matriz Curricular",
+        version = "1.0.0",
+        description = "Gestao da matriz curricular por coordenadores e matricula de alunos em aulas, com auth via Keycloak (OIDC).",
+    ),
+)
+@SecurityScheme(
+    securitySchemeName = "bearerAuth",
+    type = SecuritySchemeType.HTTP,
+    scheme = "bearer",
+    bearerFormat = "JWT",
+)
+class OpenApiConfig : Application()
