@@ -2485,6 +2485,8 @@ __metadata:
     eslint-plugin-playwright: "npm:^1.6.2"
     jsdom: "npm:^27.1.0"
     jsonc-eslint-parser: "npm:^2.1.0"
+    keycloak-angular: "npm:^22.0.0"
+    keycloak-js: "npm:^26.2.4"
     ng-packagr: "npm:~22.0.0"
     nx: "npm:23.1.1"
     postcss: "npm:^8.4.5"
@@ -9289,6 +9291,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"keycloak-angular@npm:^22.0.0":
+  version: 22.0.0
+  resolution: "keycloak-angular@npm:22.0.0"
+  dependencies:
+    tslib: "npm:^2.3.1"
+  peerDependencies:
+    "@angular/common": ^22
+    "@angular/core": ^22
+    "@angular/router": ^22
+    keycloak-js: ^18 || ^19 || ^20 || ^21 || ^22 || ^23 || ^24 || ^25 || ^26
+    rxjs: ^7
+  checksum: 10c0/f47916ae651c4c0a650343ad39cfceecaacba2e4f02c1c7e11aa2a0ceb0ee0bf7a66623a149bc1ecb05e35b9c38402d5655d1a978c93ed82539ccb804d063004
+  languageName: node
+  linkType: hard
+
+"keycloak-js@npm:^26.2.4":
+  version: 26.2.4
+  resolution: "keycloak-js@npm:26.2.4"
+  checksum: 10c0/ad1f3e7c07b6b84fd805129e21aefe94b32e48ecdde1c586294720712c0971ff4c49613c025476d30dbff22e5d61a4fc4d294050d5f11e1ecc0646bef2f02311
+  languageName: node
+  linkType: hard
+
 "keyv@npm:^4.5.4":
   version: 4.5.4
   resolution: "keyv@npm:4.5.4"
@@ -13341,7 +13365,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.8.1, tslib@npm:^2, tslib@npm:^2.0.0, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.4.0, tslib@npm:^2.8.0":
+"tslib@npm:2.8.1, tslib@npm:^2, tslib@npm:^2.0.0, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.3.1, tslib@npm:^2.4.0, tslib@npm:^2.8.0":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
