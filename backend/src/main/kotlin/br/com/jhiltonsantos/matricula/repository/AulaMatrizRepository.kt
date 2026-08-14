@@ -11,7 +11,7 @@ class AulaMatrizRepository : PanacheRepositoryBase<AulaMatriz, UUID> {
     fun findByIdAtivo(id: UUID): AulaMatriz? =
         find("id = ?1 and ativo = true", id).firstResult()
 
-    fun buscar(horarioIds: List<UUID>?, aulaIds: List<UUID>?, vagasMaximas: Int?): List<AulaMatriz> {
+    fun buscar(horarioIds: List<UUID>?, aulaIds: List<UUID>?, vagasMaximas: Int?, coordenadorId: UUID?): List<AulaMatriz> {
         val condicoes = mutableListOf("ativo = true")
         val params = mutableMapOf<String, Any>()
 
@@ -26,6 +26,10 @@ class AulaMatrizRepository : PanacheRepositoryBase<AulaMatriz, UUID> {
         vagasMaximas?.let {
             condicoes += "vagasMaximas = :vagasMaximas"
             params["vagasMaximas"] = it
+        }
+        coordenadorId?.let {
+            condicoes += "coordenadorId = :coordenadorId"
+            params["coordenadorId"] = it
         }
 
         return find(condicoes.joinToString(" and "), params).list()
