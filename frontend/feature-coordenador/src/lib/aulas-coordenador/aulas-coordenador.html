@@ -1,0 +1,49 @@
+<p-toast />
+<p-confirmDialog />
+
+<div class="flex items-center justify-between">
+  <h1>Minhas aulas</h1>
+  <p-button label="Nova aula" icon="pi pi-plus" (onClick)="abrirNovaAula()" />
+</div>
+
+<p-table [value]="aulas()" dataKey="id">
+  <ng-template #header>
+    <tr>
+      <th>Disciplina</th>
+      <th>Professor</th>
+      <th>Horário</th>
+      <th>Vagas</th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template #body let-aula>
+    <tr>
+      <td>{{ nomeDisciplina(aula.disciplinaId) }}</td>
+      <td>{{ nomeProfessor(aula.professorId) }}</td>
+      <td>{{ horarioLabel(aula.horarioId) }}</td>
+      <td>{{ aula.vagasOcupadas }} / {{ aula.vagasMaximas }}</td>
+      <td>
+        <p-button icon="pi pi-pencil" [text]="true" (onClick)="abrirEdicao(aula)" />
+        <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="confirmarExclusao(aula)" />
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #emptymessage>
+    <tr><td colspan="5">Nenhuma aula cadastrada ainda.</td></tr>
+  </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="dialogAberto" [modal]="true" [header]="aulaEmEdicao() ? 'Editar aula' : 'Nova aula'">
+  <form [formGroup]="form" (ngSubmit)="salvar()" class="flex flex-col gap-3">
+    @if (!aulaEmEdicao()) {
+      <p-select formControlName="disciplinaId" [options]="disciplinas()" optionLabel="nome" optionValue="id" placeholder="Disciplina" />
+    }
+    <p-select formControlName="professorId" [options]="professores()" optionLabel="nome" optionValue="id" placeholder="Professor" />
+    <p-select formControlName="horarioId" [options]="horarios()" optionLabel="diaSemana" optionValue="id" placeholder="Horário" />
+    <p-multiSelect formControlName="cursosAutorizados" [options]="cursos()" optionLabel="nome" optionValue="id" placeholder="Cursos autorizados" />
+    @if (!aulaEmEdicao()) {
+      <p-inputNumber formControlName="vagasMaximas" [min]="1" placeholder="Vagas máximas" />
+    }
+    <p-button type="submit" label="Salvar" [disabled]="form.invalid" />
+  </form>
+</p-dialog>
