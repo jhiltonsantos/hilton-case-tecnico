@@ -5,7 +5,7 @@ import { AreaCoordenador } from './pages/area-coordenador';
 import { AreaAluno } from './pages/area-aluno';
 import { AcessoNegado } from './pages/acesso-negado';
 
-const appRoutes: Route[] = [
+export const appRoutes: Route[] = [
   { path: '', component: Home },
   {
     path: 'coordenador',
@@ -21,5 +21,3 @@ const appRoutes: Route[] = [
   },
   { path: 'acesso-negado', component: AcessoNegado },
 ];
-
-export default appRoutes;
