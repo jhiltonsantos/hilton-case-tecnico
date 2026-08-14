@@ -34,4 +34,10 @@ class AulaMatrizRepository : PanacheRepositoryBase<AulaMatriz, UUID> {
 
         return find(condicoes.joinToString(" and "), params).list()
     }
+    
+    fun ocuparVaga(aulaId: UUID): Boolean {
+        val linhasAfetadas = update("vagasOcupadas = vagasOcupadas + 1 where id = ?1 and vagasOcupadas < vagasMaximas", aulaId)
+        return linhasAfetadas > 0
+    }
+
 }
