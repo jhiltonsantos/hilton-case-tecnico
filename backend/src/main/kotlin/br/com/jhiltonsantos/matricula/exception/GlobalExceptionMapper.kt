@@ -15,7 +15,7 @@ class GlobalExceptionMapper : ExceptionMapper<Exception> {
             Response.status(Response.Status.NOT_FOUND).entity(ErroResponse(exception.message)).build()
 
         is RegraNegocioException ->
-            Response.status(Response.Status.UNPROCESSABLE_ENTITY).entity(ErroResponse(exception.message)).build()
+            Response.status(422).entity(ErroResponse(exception.message)).build()
 
         is IllegalArgumentException ->
             Response.status(Response.Status.BAD_REQUEST).entity(ErroResponse(exception.message)).build()
