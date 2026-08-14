@@ -16,6 +16,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import java.time.LocalTime
 import java.util.UUID
 import org.eclipse.microprofile.openapi.annotations.Operation
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
@@ -54,7 +55,10 @@ class AulaMatrizResource(private val aulaMatrizService: AulaMatrizService) {
     @APIResponses(
         APIResponse(responseCode = "200", description = "Aula editada"),
         APIResponse(responseCode = "404", description = "Aula, professor, horario ou curso inexistente"),
-        APIResponse(responseCode = "403", description = "Aula nao pertence a este coordenador, ou token sem role COORDENADOR"),
+        APIResponse(
+            responseCode = "403",
+            description = "Aula nao pertence a este coordenador, ou token sem role COORDENADOR"
+        ),
     )
     @PUT
     @Path("/{id}")
@@ -90,26 +94,39 @@ class AulaMatrizResource(private val aulaMatrizService: AulaMatrizService) {
     @GET
     @RolesAllowed("COORDENADOR", "ALUNO")
     fun pesquisar(
+        @Parameter(description = "Filtra por periodo do dia", required = false)
         @QueryParam("periodoDia") periodoDia: PeriodoDia?,
+        
+        @Parameter(description = "Inicio do intervalo de horario (usar junto com horarioFim) ", required = false)
         @QueryParam("horarioInicio") horarioInicio: LocalTime?,
+        
+        @Parameter(description = "Fim do intervalo de horario (usar junto com horarioInicio) ", required = false)
         @QueryParam("horarioFim") horarioFim: LocalTime?,
+        
+        @Parameter(description = "Filtra por curso autorizado", required = false)
         @QueryParam("cursoId") cursoId: UUID?,
+        
+        @Parameter(description = "Filtra por quantidade de vagas maximas", required = false)
         @QueryParam("vagasMaximas") vagasMaximas: Int?,
+        
         @Context securityContext: SecurityContext,
-    ): List<AulaResponse> {
+    ): List<AulaResponse>
+    {
         val coordenadorId = if (securityContext.isUserInRole("COORDENADOR")) UUID.fromString(jwt.subject) else null
         return aulaMatrizService.pesquisar(periodoDia, horarioInicio, horarioFim, cursoId, vagasMaximas, coordenadorId)
-            .map { AulaResponse(
-                id = it.id!!,
-                disciplinaId = it.disciplinaId,
-                professorId = it.professorId,
-                horarioId = it.horarioId,
-                coordenadorId = it.coordenadorId,
-                cursosAutorizados = aulaMatrizService.cursosAutorizadosDe(it.id!!),
-                vagasMaximas = it.vagasMaximas,
-                vagasOcupadas = it.vagasOcupadas,
-                ativo = it.ativo,
-            ) }
+            .map {
+                AulaResponse(
+                    id = it.id!!,
+                    disciplinaId = it.disciplinaId,
+                    professorId = it.professorId,
+                    horarioId = it.horarioId,
+                    coordenadorId = it.coordenadorId,
+                    cursosAutorizados = aulaMatrizService.cursosAutorizadosDe(it.id!!),
+                    vagasMaximas = it.vagasMaximas,
+                    vagasOcupadas = it.vagasOcupadas,
+                    ativo = it.ativo,
+                )
+            }
     }
 
     private fun paraResponse(id: UUID): AulaResponse {
