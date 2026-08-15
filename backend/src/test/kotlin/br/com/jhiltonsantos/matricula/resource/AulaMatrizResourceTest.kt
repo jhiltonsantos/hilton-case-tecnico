@@ -2,12 +2,19 @@ package br.com.jhiltonsantos.matricula.resource
 
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.security.TestSecurity
+import io.quarkus.test.security.oidc.Claim
+import io.quarkus.test.security.oidc.OidcSecurity
 import io.restassured.RestAssured.given
 import org.junit.jupiter.api.Test
 import org.hamcrest.Matchers.equalTo
 
 @QuarkusTest
 class AulaMatrizResourceTest {
+
+    companion object {
+        // UUID de coordenador1 no seed
+        private const val COORDENADOR1 = "60000000-0000-0000-0000-000000000001"
+    }
 
     @Test
     fun `GET aulas sem token retorna 401`() {
@@ -26,6 +33,7 @@ class AulaMatrizResourceTest {
 
     @Test
     @TestSecurity(user = "coordenador-teste", roles = ["COORDENADOR"])
+    @OidcSecurity(claims = [Claim(key = "sub", value = COORDENADOR1)])
     fun `GET aulas sem nenhum filtro retorna 200, nao 400`() {
         given().`when`().get("/aulas").then().statusCode(200)
     }

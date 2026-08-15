@@ -6,7 +6,10 @@ import br.com.jhiltonsantos.matricula.domain.Curso
 import br.com.jhiltonsantos.matricula.domain.Disciplina
 import br.com.jhiltonsantos.matricula.domain.Horario
 import br.com.jhiltonsantos.matricula.domain.Professor
+import br.com.jhiltonsantos.matricula.domain.exception.AcessoNegadoException
+import br.com.jhiltonsantos.matricula.domain.exception.AulaComMatriculadosException
 import br.com.jhiltonsantos.matricula.domain.exception.DisciplinaJaOfertadaNoHorarioException
+import br.com.jhiltonsantos.matricula.domain.exception.DisciplinaNaoEncontradaException
 import br.com.jhiltonsantos.matricula.dto.AtualizarAulaRequest
 import br.com.jhiltonsantos.matricula.dto.CriarAulaRequest
 import br.com.jhiltonsantos.matricula.repository.AulaCursoAutorizadoRepository

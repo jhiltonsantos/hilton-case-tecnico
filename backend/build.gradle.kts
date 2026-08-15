@@ -30,7 +30,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.13")
     testImplementation("io.rest-assured:rest-assured")
     testImplementation("io.quarkus:quarkus-test-security")
-    testImplementation("io.quarkus:quarkus-test-security-jwt")
+    testImplementation("io.quarkus:quarkus-test-security-oidc")
 }
 
 group = "br.com.jhiltonsantos.matricula"
