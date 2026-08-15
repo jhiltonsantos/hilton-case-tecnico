@@ -1,19 +1,20 @@
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import Keycloak from 'keycloak-js';
 
 @Component({
   selector: 'app-home',
-  template: `
-    @if (keycloak.authenticated) {
-      <p>Logado como {{ keycloak.tokenParsed?.['preferred_username'] }}</p>
-      <button (click)="logout()">Sair</button>
-    } @else {
-      <button (click)="login()">Entrar</button>
-    }
-  `,
+  imports: [RouterLink],
+  templateUrl: './home.html',
+  styleUrl: './home.scss',
 })
 export class Home {
   protected keycloak = inject(Keycloak);
+
+  hasRole(role: string): boolean {
+    const token = this.keycloak.tokenParsed as { realm_access?: { roles?: string[] } } | undefined;
+    return token?.realm_access?.roles?.includes(role) ?? false;
+  }
 
   login(): void {
     this.keycloak.login();

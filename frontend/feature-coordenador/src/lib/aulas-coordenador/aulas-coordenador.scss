@@ -1,0 +1,94 @@
+.pagina {
+  padding: 2.5rem 3rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.cabecalho {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--brand-border);
+}
+
+.cabecalho__eyebrow {
+  margin: 0 0 0.35rem;
+  font-family: var(--brand-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand-gold);
+}
+
+.cabecalho__titulo {
+  margin: 0 0 0.3rem;
+  font-size: 1.75rem;
+}
+
+.cabecalho__subtitulo {
+  margin: 0;
+  color: var(--brand-muted);
+  font-size: 0.9rem;
+}
+
+.tabela-aulas__acoes {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}
+
+.vazio {
+  padding: 2.5rem 1rem;
+  text-align: center;
+}
+
+.vazio__titulo {
+  margin: 0 0 0.4rem;
+  font-family: var(--brand-serif);
+  font-size: 1.1rem;
+  color: var(--brand-ink);
+}
+
+.vazio__texto {
+  margin: 0;
+  color: var(--brand-muted);
+  font-size: 0.9rem;
+}
+
+.form-aula {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding-top: 0.25rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.campo__rotulo {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--brand-muted);
+}
+
+.campo p-select,
+.campo p-multiselect,
+.campo p-inputnumber {
+  display: block;
+  width: 100%;
+}
+
+.form-aula__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}

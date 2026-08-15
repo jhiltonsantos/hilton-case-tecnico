@@ -1,1 +1,34 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'primeicons/primeicons.css';
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --brand-serif: 'Newsreader', 'Georgia', serif;
+  --brand-sans: 'Inter', 'Segoe UI', sans-serif;
+  --brand-gold: #d9a441;
+  --brand-gold-soft: rgba(217, 164, 65, 0.16);
+  --brand-ink: #eef1f5;
+  --brand-muted: #9aa3b2;
+  --brand-bg: #12151a;
+  --brand-surface: #1b1f27;
+  --brand-border: rgba(255, 255, 255, 0.08);
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--brand-sans);
+  background: var(--brand-bg);
+  color: var(--brand-ink);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--brand-serif);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}

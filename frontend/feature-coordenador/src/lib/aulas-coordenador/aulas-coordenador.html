@@ -1,0 +1,86 @@
+<p-toast />
+<p-confirmdialog />
+
+<div class="pagina">
+  <header class="cabecalho">
+    <div>
+      <p class="cabecalho__eyebrow">Matrícula</p>
+      <h1 class="cabecalho__titulo">Minhas aulas</h1>
+      <p class="cabecalho__subtitulo">Aulas da matriz curricular sob sua coordenação</p>
+    </div>
+    <p-button label="Nova aula" icon="pi pi-plus" (onClick)="abrirNovaAula()" />
+  </header>
+
+  <p-table [value]="aulas()" dataKey="id" styleClass="tabela-aulas">
+    <ng-template #header>
+      <tr>
+        <th>Disciplina</th>
+        <th>Professor</th>
+        <th>Horário</th>
+        <th>Vagas</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-aula>
+      <tr>
+        <td>{{ nomeDisciplina(aula.disciplinaId) }}</td>
+        <td>{{ nomeProfessor(aula.professorId) }}</td>
+        <td>{{ horarioLabel(aula.horarioId) }}</td>
+        <td>{{ aula.vagasOcupadas }} / {{ aula.vagasMaximas }}</td>
+        <td class="tabela-aulas__acoes">
+          <p-button icon="pi pi-pencil" [text]="true" (onClick)="abrirEdicao(aula)" />
+          <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="confirmarExclusao(aula)" />
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="5">
+          <div class="vazio">
+            <p class="vazio__titulo">Nenhuma aula cadastrada ainda</p>
+            <p class="vazio__texto">Clique em "Nova aula" para criar a primeira aula da sua matriz.</p>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog
+  [(visible)]="dialogAberto"
+  [modal]="true"
+  [style]="{ width: '28rem' }"
+  [header]="aulaEmEdicao() ? 'Editar aula' : 'Nova aula'"
+>
+  <form [formGroup]="form" (ngSubmit)="salvar()" class="form-aula">
+    @if (!aulaEmEdicao()) {
+      <label class="campo">
+        <span class="campo__rotulo">Disciplina</span>
+        <p-select formControlName="disciplinaId" [options]="disciplinas()" optionLabel="nome" optionValue="id" placeholder="Selecione a disciplina" appendTo="body" />
+      </label>
+    }
+    <label class="campo">
+      <span class="campo__rotulo">Professor</span>
+      <p-select formControlName="professorId" [options]="professores()" optionLabel="nome" optionValue="id" placeholder="Selecione o professor" appendTo="body" />
+    </label>
+    <label class="campo">
+      <span class="campo__rotulo">Horário</span>
+      <p-select formControlName="horarioId" [options]="horarios()" optionLabel="diaSemana" optionValue="id" placeholder="Selecione o horário" appendTo="body" />
+    </label>
+    <label class="campo">
+      <span class="campo__rotulo">Cursos autorizados</span>
+      <p-multiselect formControlName="cursosAutorizados" [options]="cursos()" optionLabel="nome" optionValue="id" placeholder="Selecione os cursos" appendTo="body" />
+    </label>
+    @if (!aulaEmEdicao()) {
+      <label class="campo">
+        <span class="campo__rotulo">Vagas máximas</span>
+        <p-inputnumber formControlName="vagasMaximas" [min]="1" placeholder="Ex.: 30" />
+      </label>
+    }
+
+    <div class="form-aula__acoes">
+      <p-button type="button" label="Cancelar" severity="secondary" [text]="true" (onClick)="fecharDialogo()" />
+      <p-button type="submit" label="Salvar" [disabled]="form.invalid" />
+    </div>
+  </form>
+</p-dialog>
