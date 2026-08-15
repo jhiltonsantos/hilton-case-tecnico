@@ -15,3 +15,6 @@ class ChoqueDeHorarioException(aulaId: UUID) :
 
 class VagaIndisponivelException(aulaId: UUID) :
     RegraNegocioException(mensagem = "Nao ha vaga disponivel na aula: $aulaId")
+
+class DisciplinaJaOfertadaNoHorarioException(disciplinaId: UUID, horarioId: UUID) :
+    RegraNegocioException(mensagem = "Disciplina ja ofertada nesse horario: disciplina=$disciplinaId horario=$horarioId")

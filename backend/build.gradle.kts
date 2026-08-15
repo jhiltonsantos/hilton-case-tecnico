@@ -26,7 +26,11 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-oidc")
-    testImplementation("io.quarkus:quarkus-junit")
+    testImplementation("io.quarkus:quarkus-junit5")
+    testImplementation("io.mockk:mockk:1.13.13")
+    testImplementation("io.rest-assured:rest-assured")
+    testImplementation("io.quarkus:quarkus-test-security")
+    testImplementation("io.quarkus:quarkus-test-security-oidc")
 }
 
 group = "br.com.jhiltonsantos.matricula"

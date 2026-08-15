@@ -6,6 +6,7 @@ import br.com.jhiltonsantos.matricula.domain.PeriodoDia
 import br.com.jhiltonsantos.matricula.domain.exception.AulaComMatriculadosException
 import br.com.jhiltonsantos.matricula.domain.exception.AulaNaoEncontradaException
 import br.com.jhiltonsantos.matricula.domain.exception.CursoNaoEncontradoException
+import br.com.jhiltonsantos.matricula.domain.exception.DisciplinaJaOfertadaNoHorarioException
 import br.com.jhiltonsantos.matricula.domain.exception.DisciplinaNaoEncontradaException
 import br.com.jhiltonsantos.matricula.domain.exception.HorarioNaoEncontradoException
 import br.com.jhiltonsantos.matricula.domain.exception.ProfessorNaoEncontradoException
@@ -46,6 +47,9 @@ class AulaMatrizService(
         request.cursosAutorizados.forEach { cursoId ->
             cursoRepository.findById(cursoId) ?: throw CursoNaoEncontradoException(cursoId)
         }
+        if (aulaMatrizRepository.existeAtivaComDisciplinaEHorario(request.disciplinaId, request.horarioId)) {
+            throw DisciplinaJaOfertadaNoHorarioException(request.disciplinaId, request.horarioId)
+        }
 
         val aula = AulaMatriz(
             disciplinaId = request.disciplinaId,
@@ -73,6 +77,9 @@ class AulaMatrizService(
             ?: throw HorarioNaoEncontradoException(request.horarioId)
         request.cursosAutorizados.forEach { cursoId ->
             cursoRepository.findById(cursoId) ?: throw CursoNaoEncontradoException(cursoId)
+        }
+        if (aulaMatrizRepository.existeAtivaComDisciplinaEHorario(aula.disciplinaId, request.horarioId, excluirId = id)) {
+            throw DisciplinaJaOfertadaNoHorarioException(aula.disciplinaId, request.horarioId)
         }
 
         aula.professorId = request.professorId

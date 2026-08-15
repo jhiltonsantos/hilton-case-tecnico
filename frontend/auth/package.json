@@ -2,8 +2,10 @@
   "name": "@frontend/auth",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^22.0.0",
-    "@angular/core": "^22.0.0"
+    "@angular/core": "~21.2.20",
+    "@angular/router": "~21.2.20",
+    "keycloak-angular": "~21.0.0",
+    "keycloak-js": "^26.2.4"
   },
   "sideEffects": false
 }
