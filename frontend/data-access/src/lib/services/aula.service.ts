@@ -9,9 +9,11 @@ const API_BASE_URL = 'http://localhost:8080';
 export class AulaService {
   private readonly http = inject(HttpClient);
 
-  listar(): Observable<Aula[]> {
-    return this.http.get<Aula[]>(`${API_BASE_URL}/aulas`);
-  }
+  listar(filtros?: { cursoId?: string }): Observable<Aula[]> {
+    const params: Record<string, string> = {};
+    if (filtros?.cursoId) params['cursoId'] = filtros.cursoId;
+    return this.http.get<Aula[]>(`${API_BASE_URL}/aulas`, { params });
+   }
 
   criar(request: CriarAulaRequest): Observable<Aula> {
     return this.http.post<Aula>(`${API_BASE_URL}/aulas`, request);

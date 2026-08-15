@@ -2,7 +2,7 @@ import { Route } from '@angular/router';
 import { roleGuard } from '@frontend/auth';
 import { Home } from './pages/home/home';
 import { AulasCoordenador } from '@frontend/feature-coordenador';
-import { AreaAluno } from './pages/area-aluno/area-aluno';
+import { MatriculaAluno } from '@frontend/feature-aluno';
 import { AcessoNegado } from './pages/acesso-negado/acesso-negado';
 
 export const appRoutes: Route[] = [
@@ -15,7 +15,7 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'aluno',
-    component: AreaAluno,
+    component: MatriculaAluno,
     canActivate: [roleGuard],
     data: { roles: ['ALUNO'] },
   },

@@ -1,0 +1,54 @@
+.pagina {
+  padding: 2.5rem 3rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.cabecalho {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--brand-border);
+}
+
+.cabecalho__eyebrow {
+  margin: 0 0 0.35rem;
+  font-family: var(--brand-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand-gold);
+}
+
+.cabecalho__titulo {
+  margin: 0 0 0.3rem;
+  font-size: 1.75rem;
+}
+
+.cabecalho__subtitulo {
+  margin: 0;
+  color: var(--brand-muted);
+  font-size: 0.9rem;
+}
+
+.secao {
+  margin-bottom: 2.5rem;
+}
+
+.secao__titulo {
+  font-size: 1.1rem;
+  margin: 0 0 1rem;
+}
+
+.vazio {
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.vazio__titulo {
+  margin: 0;
+  font-family: var(--brand-serif);
+  font-size: 1rem;
+  color: var(--brand-ink);
+}
