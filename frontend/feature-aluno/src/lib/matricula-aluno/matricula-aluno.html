@@ -1,0 +1,89 @@
+<p-toast />
+
+<div class="pagina">
+  <header class="cabecalho">
+    <p class="cabecalho__eyebrow">Matrícula</p>
+    <h1 class="cabecalho__titulo">Minha área</h1>
+    <p class="cabecalho__subtitulo">
+      Aulas disponíveis para o seu curso e suas matrículas ativas
+    </p>
+  </header>
+
+  <section class="secao">
+    <h2 class="secao__titulo">Aulas disponíveis</h2>
+    <p-table [value]="aulasDisponiveis()" dataKey="id">
+      <ng-template #header>
+        <tr>
+          <th>Disciplina</th>
+          <th>Professor</th>
+          <th>Horário</th>
+          <th>Vagas</th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-aula>
+        <tr>
+          <td>{{ nomeDisciplina(aula.disciplinaId) }}</td>
+          <td>{{ nomeProfessor(aula.professorId) }}</td>
+          <td>{{ horarioLabel(aula.horarioId) }}</td>
+          <td>{{ aula.vagasOcupadas }} / {{ aula.vagasMaximas }}</td>
+          <td>
+            @if (jaMatriculado(aula.id)) {
+            <p-tag value="Matriculado" severity="success" />
+            } @else {
+            <p-button
+              label="Matricular"
+              size="small"
+              [loading]="matriculando() === aula.id"
+              [disabled]="aula.vagasOcupadas >= aula.vagasMaximas"
+              (onClick)="matricular(aula)"
+            />
+            }
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="5">
+            <div class="vazio">
+              <p class="vazio__titulo">
+                Nenhuma aula disponível para o seu curso no momento
+              </p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </section>
+
+  <section class="secao">
+    <h2 class="secao__titulo">Minhas matrículas</h2>
+    <p-table [value]="minhasMatriculas()" dataKey="id">
+      <ng-template #header>
+        <tr>
+          <th>Disciplina</th>
+          <th>Professor</th>
+          <th>Horário</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-matricula>
+        <tr>
+          <td>{{ nomeDisciplina(matricula.disciplinaId) }}</td>
+          <td>{{ nomeProfessor(matricula.professorId) }}</td>
+          <td>{{ horarioLabel(matricula.horarioId) }}</td>
+        </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="3">
+            <div class="vazio">
+              <p class="vazio__titulo">
+                Você ainda não está matriculado em nenhuma aula
+              </p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </section>
+</div>
