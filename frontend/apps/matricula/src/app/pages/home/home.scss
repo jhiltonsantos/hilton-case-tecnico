@@ -1,0 +1,122 @@
+.portal {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.portal__card {
+  width: 100%;
+  max-width: 26rem;
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: 12px;
+  padding: 2.5rem 2.25rem;
+  box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6);
+  box-sizing: border-box;
+}
+
+.portal__eyebrow {
+  margin: 0 0 0.35rem;
+  font-family: var(--brand-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand-gold);
+}
+
+.portal__title {
+  margin: 0 0 1.75rem;
+  font-size: 1.6rem;
+  line-height: 1.25;
+  color: var(--brand-ink);
+  border-bottom: 1px solid var(--brand-border);
+  padding-bottom: 1.5rem;
+}
+
+.portal__subtitle,
+.portal__greeting {
+  margin: 0 0 1.5rem;
+  color: var(--brand-muted);
+  font-size: 0.95rem;
+}
+
+.portal__greeting strong {
+  color: var(--brand-ink);
+  font-weight: 600;
+}
+
+.portal__enter {
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--brand-gold);
+  color: #241a04;
+  font-family: var(--brand-sans);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.portal__enter:hover {
+  filter: brightness(1.08);
+}
+
+.portal__destinations {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.destination {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1rem 1.1rem;
+  border-radius: 8px;
+  border: 1px solid var(--brand-border);
+  background: rgba(255, 255, 255, 0.02);
+  text-decoration: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.destination:hover {
+  border-color: var(--brand-gold);
+  background: var(--brand-gold-soft);
+}
+
+.destination__label {
+  font-weight: 600;
+  color: var(--brand-ink);
+  font-size: 0.95rem;
+}
+
+.destination__hint {
+  font-size: 0.8rem;
+  color: var(--brand-muted);
+}
+
+.portal__logout {
+  width: 100%;
+  padding: 0.6rem 1.25rem;
+  border: 1px solid var(--brand-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--brand-muted);
+  font-family: var(--brand-sans);
+  font-weight: 500;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.portal__logout:hover {
+  border-color: var(--brand-muted);
+  color: var(--brand-ink);
+}

@@ -5,8 +5,8 @@ import Keycloak from 'keycloak-js';
 @Component({
   selector: 'app-home',
   imports: [RouterLink],
-  templateUrl: './template.html',
-  styleUrl: './style.scss',
+  templateUrl: './home.html',
+  styleUrl: './home.scss',
 })
 export class Home {
   protected keycloak = inject(Keycloak);
