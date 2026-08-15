@@ -28,8 +28,8 @@ import { Aula, AulaService, CatalogoService, Curso, Disciplina, Horario, Profess
     ToastModule,
   ],
   providers: [ConfirmationService, MessageService],
-  templateUrl: './template.html',
-  styleUrl: './style.scss',
+  templateUrl: './aulas-coordenador.html',
+  styleUrl: './aulas-coordenador.scss',
 })
 export class AulasCoordenador implements OnInit {
   private readonly aulaService = inject(AulaService);
@@ -96,6 +96,10 @@ export class AulasCoordenador implements OnInit {
       vagasMaximas: aula.vagasMaximas,
     });
     this.dialogAberto.set(true);
+  }
+
+  fecharDialogo(): void {
+    this.dialogAberto.set(false);
   }
 
   salvar(): void {
