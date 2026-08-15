@@ -1,0 +1,2 @@
+cd frontend
+yarn nx run-many -t lint --all

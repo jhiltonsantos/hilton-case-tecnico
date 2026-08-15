@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { Subject, finalize, forkJoin, startWith, switchMap, tap } from 'rxjs';
+import { Subject, finalize, forkJoin, startWith, switchMap } from 'rxjs';
 import {
   AlunoService,
   AulaService,

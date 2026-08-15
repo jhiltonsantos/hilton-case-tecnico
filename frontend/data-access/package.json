@@ -2,8 +2,9 @@
   "name": "@frontend/data-access",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^22.0.0",
-    "@angular/core": "^22.0.0"
+    "@angular/common": "~21.2.20",
+    "@angular/core": "~21.2.20",
+    "rxjs": "~7.8.0"
   },
   "sideEffects": false
 }
