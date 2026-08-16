@@ -6,7 +6,7 @@
     @if (keycloak.authenticated) {
     <p class="portal__greeting">
       Bem-vindo(a), <strong>{{ nomeCompleto() }}</strong> ({{
-      keycloak.tokenParsed?.['preferred_username'] }})!
+      keycloak.tokenParsed?.['preferred_username'] }})
     </p>
 
     <nav class="portal__destinations">

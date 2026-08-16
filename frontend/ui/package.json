@@ -4,7 +4,8 @@
   "peerDependencies": {
     "@angular/core": "~21.2.20",
     "@angular/router": "~21.2.20",
-    "keycloak-js": "^26.2.4"
+    "keycloak-js": "^26.2.4",
+    "@angular/common": "~21.2.20"
   },
   "sideEffects": false
 }
