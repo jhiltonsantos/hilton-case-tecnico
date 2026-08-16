@@ -25,6 +25,7 @@ services:
       - "8081:8080"
     volumes:
       - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+      - ./keycloak/themes/matricula:/opt/keycloak/themes/matricula
 
   backend:
     build:
