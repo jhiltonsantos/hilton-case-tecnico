@@ -26,7 +26,15 @@ export interface Horario {
   horarioFim: string;
 }
 
-const DIA_SEMANA_LABEL: Record<DiaSemana, string> = {
+export type PeriodoDia = 'MANHA' | 'TARDE' | 'NOITE';
+
+export const PERIODO_DIA_LABEL: Record<PeriodoDia, string> = {
+  MANHA: 'Manhã',
+  TARDE: 'Tarde',
+  NOITE: 'Noite',
+};
+
+export const DIA_SEMANA_LABEL: Record<DiaSemana, string> = {
   SEGUNDA: 'Segunda',
   TERCA: 'Terça',
   QUARTA: 'Quarta',
