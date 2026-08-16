@@ -50,7 +50,24 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideAnimationsAsync(),
-    providePrimeNG({ theme: { preset: MatriculaPreset } }),
+    providePrimeNG({
+      theme: { preset: MatriculaPreset },
+      translation: {
+        emptyMessage: 'Nenhum resultado encontrado',
+        emptyFilterMessage: 'Nenhum resultado encontrado',
+        selectionMessage: '{0} itens selecionados',
+        emptySelectionMessage: 'Nenhum item selecionado',
+        clear: 'Limpar',
+        apply: 'Aplicar',
+        accept: 'Sim',
+        reject: 'Não',
+        aria: {
+          selectAll: 'Selecionar todos',
+          unselectAll: 'Limpar seleção',
+          close: 'Fechar',
+        },
+      },
+    }),
     { provide: API_BASE_URL, useValue: 'http://localhost:8080' },
     provideKeycloak({
       config: {
