@@ -19,6 +19,7 @@ import {
   FiltrosAula,
   formatarHorario,
   Horario,
+  ordenarPorHorario,
   PERIODO_DIA_LABEL,
   PeriodoDia,
   Professor,
@@ -60,6 +61,7 @@ export class AulasCoordenador implements OnInit {
     this.horarios().map((h) => ({ ...h, label: formatarHorario(h) })),
   );
   cursos = signal<Curso[]>([]);
+  aulasOrdenadas = computed(() => ordenarPorHorario(this.aulas(), this.horarios()));
 
   dialogAberto = signal(false);
   aulaEmEdicao = signal<Aula | null>(null);

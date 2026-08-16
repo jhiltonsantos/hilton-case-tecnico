@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -17,6 +17,7 @@ import {
   formatarHorario,
   Horario,
   Matricula,
+  ordenarPorHorario,
   Professor,
 } from '@frontend/data-access';
 import { CabecalhoPagina } from '@frontend/ui';
@@ -46,6 +47,9 @@ export class MatriculaAluno implements OnInit {
   aulasDisponiveis = signal<Aula[]>([]);
   minhasMatriculas = signal<Matricula[]>([]);
   matriculando = signal<string | null>(null);
+
+  aulasDisponiveisOrdenadas = computed(() => ordenarPorHorario(this.aulasDisponiveis(), this.horarios()));
+  minhasMatriculasOrdenadas = computed(() => ordenarPorHorario(this.minhasMatriculas(), this.horarios()));
 
   ngOnInit(): void {
     this.catalogoService.disciplinas().subscribe((v) => this.disciplinas.set(v));
