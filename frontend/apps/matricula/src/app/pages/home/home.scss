@@ -49,22 +49,26 @@
   font-weight: 600;
 }
 
-.portal__enter {
+%portal-button {
   width: 100%;
-  padding: 0.75rem 1.25rem;
-  border: none;
+  padding: 0.6rem 1.25rem;
   border-radius: 8px;
-  background: var(--brand-gold);
-  color: #241a04;
   font-family: var(--brand-sans);
-  font-weight: 600;
-  font-size: 0.95rem;
+  font-weight: 500;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: filter 0.15s ease;
 }
 
-.portal__enter:hover {
+%portal-button:hover {
   filter: brightness(1.08);
+}
+
+.portal__enter {
+  @extend %portal-button;
+  border: none;
+  background: var(--brand-gold);
+  color: #241a04;
 }
 
 .portal__destinations {
@@ -103,20 +107,8 @@
 }
 
 .portal__logout {
-  width: 100%;
-  padding: 0.6rem 1.25rem;
-  border: 1px solid var(--brand-border);
-  border-radius: 8px;
-  background: transparent;
-  color: var(--brand-muted);
-  font-family: var(--brand-sans);
-  font-weight: 500;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease;
-}
-
-.portal__logout:hover {
-  border-color: var(--brand-muted);
-  color: var(--brand-ink);
+  @extend %portal-button;
+  border: 1px solid #7f1d1d;
+  background: #f87171;
+  color: #ffffff;
 }

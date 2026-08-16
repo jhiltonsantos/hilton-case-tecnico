@@ -2,14 +2,13 @@
 <p-confirmdialog />
 
 <div class="pagina">
-  <header class="cabecalho">
-    <div>
-      <p class="cabecalho__eyebrow">Matrícula</p>
-      <h1 class="cabecalho__titulo">Minhas aulas</h1>
-      <p class="cabecalho__subtitulo">Aulas da matriz curricular sob sua coordenação</p>
-    </div>
+  <lib-cabecalho-pagina
+    eyebrow="Matrícula"
+    titulo="Minhas aulas"
+    subtitulo="Aulas da matriz curricular sob sua coordenação"
+  >
     <p-button label="Nova aula" icon="pi pi-plus" (onClick)="abrirNovaAula()" />
-  </header>
+  </lib-cabecalho-pagina>
 
   <p-table [value]="aulas()" dataKey="id" styleClass="tabela-aulas">
     <ng-template #header>
@@ -56,20 +55,20 @@
     @if (!aulaEmEdicao()) {
       <label class="campo">
         <span class="campo__rotulo">Disciplina</span>
-        <p-select formControlName="disciplinaId" [options]="disciplinas()" optionLabel="nome" optionValue="id" placeholder="Selecione a disciplina" appendTo="body" />
+        <p-select formControlName="disciplinaId" [options]="disciplinas()" optionLabel="nome" optionValue="id" [filter]="true" filterBy="nome" placeholder="Selecione a disciplina" appendTo="body" />
       </label>
     }
     <label class="campo">
       <span class="campo__rotulo">Professor</span>
-      <p-select formControlName="professorId" [options]="professores()" optionLabel="nome" optionValue="id" placeholder="Selecione o professor" appendTo="body" />
+      <p-select formControlName="professorId" [options]="professores()" optionLabel="nome" optionValue="id" [filter]="true" filterBy="nome" placeholder="Selecione o professor" appendTo="body" />
     </label>
     <label class="campo">
       <span class="campo__rotulo">Horário</span>
-      <p-select formControlName="horarioId" [options]="horarios()" optionLabel="diaSemana" optionValue="id" placeholder="Selecione o horário" appendTo="body" />
+      <p-select formControlName="horarioId" [options]="horariosOptions()" optionLabel="label" optionValue="id" placeholder="Selecione o horário" appendTo="body" />
     </label>
     <label class="campo">
       <span class="campo__rotulo">Cursos autorizados</span>
-      <p-multiselect formControlName="cursosAutorizados" [options]="cursos()" optionLabel="nome" optionValue="id" placeholder="Selecione os cursos" appendTo="body" />
+      <p-multiselect formControlName="cursosAutorizados" [options]="cursos()" optionLabel="nome" optionValue="id" [filter]="true" filterBy="nome" placeholder="Selecione os cursos" appendTo="body" />
     </label>
     @if (!aulaEmEdicao()) {
       <label class="campo">

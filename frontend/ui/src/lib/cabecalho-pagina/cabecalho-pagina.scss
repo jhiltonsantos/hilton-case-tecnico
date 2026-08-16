@@ -1,0 +1,89 @@
+.cabecalho-pagina {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--brand-border);
+}
+
+.cabecalho-pagina__acoes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.cabecalho-pagina__usuario-acoes {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Divisor só entre o nome (texto sem borda própria) e o grupo de botões - os
+   botões já têm sua própria borda em todos os lados, então um divisor entre
+   cada um seria redundante (e, por vir como padding extra só de um lado,
+   descentralizava o ícone dentro do botão). */
+.cabecalho-pagina__usuario {
+  padding-right: 0.75rem;
+  border-right: 1px solid var(--brand-border);
+  font-family: var(--brand-sans);
+  font-size: 0.85rem;
+  color: var(--brand-muted);
+}
+
+.icone-botao {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--brand-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--brand-muted);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.icone-botao:hover {
+  border-color: var(--brand-gold);
+  color: var(--brand-ink);
+}
+
+.icone-botao--sair:hover {
+  border-color: #f87171;
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.cabecalho-pagina__linha {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.cabecalho-pagina__eyebrow {
+  margin: 0 0 0.35rem;
+  font-family: var(--brand-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand-gold);
+}
+
+.cabecalho-pagina__titulo {
+  margin: 0 0 0.3rem;
+  font-size: 1.75rem;
+  color: var(--brand-ink);
+}
+
+.cabecalho-pagina__subtitulo {
+  margin: 0;
+  color: var(--brand-muted);
+  font-size: 0.9rem;
+}

@@ -24,7 +24,8 @@ class AlunoResourceTest {
             .then()
             .statusCode(200)
             .body("id", equalTo(ALUNO1))
-            .body("nome", equalTo("Joao Souza"))
+            .body("nome", equalTo("Ana Silva"))
+            .body("cursoNome", equalTo("Ciencia da Computacao"))
     }
 
     @Test

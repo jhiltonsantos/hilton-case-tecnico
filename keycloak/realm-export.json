@@ -1,6 +1,10 @@
 {
   "realm": "matricula",
   "enabled": true,
+  "loginTheme": "matricula",
+  "internationalizationEnabled": true,
+  "supportedLocales": ["pt-BR"],
+  "defaultLocale": "pt-BR",
   "roles": {
     "realm": [
       {

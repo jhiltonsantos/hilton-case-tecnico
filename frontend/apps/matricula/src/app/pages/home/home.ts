@@ -11,8 +11,26 @@ import Keycloak from 'keycloak-js';
 export class Home {
   protected keycloak = inject(Keycloak);
 
+  nomeCompleto(): string {
+    const token = this.keycloak.tokenParsed as
+      | {
+          name?: string;
+          given_name?: string;
+          family_name?: string;
+          preferred_username?: string;
+        }
+      | undefined;
+    if (token?.name) return token.name;
+    if (token?.given_name || token?.family_name) {
+      return [token?.given_name, token?.family_name].filter(Boolean).join(' ');
+    }
+    return token?.preferred_username ?? '';
+  }
+
   hasRole(role: string): boolean {
-    const token = this.keycloak.tokenParsed as { realm_access?: { roles?: string[] } } | undefined;
+    const token = this.keycloak.tokenParsed as
+      | { realm_access?: { roles?: string[] } }
+      | undefined;
     return token?.realm_access?.roles?.includes(role) ?? false;
   }
 
