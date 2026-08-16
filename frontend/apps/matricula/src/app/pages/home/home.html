@@ -4,29 +4,37 @@
     <h1 class="portal__title">Gestão da matriz curricular</h1>
 
     @if (keycloak.authenticated) {
-      <p class="portal__greeting">
-        Bem-vindo(a), <strong>{{ keycloak.tokenParsed?.['preferred_username'] }}</strong>
-      </p>
+    <p class="portal__greeting">
+      Bem-vindo(a), <strong>{{ nomeCompleto() }}</strong> ({{
+      keycloak.tokenParsed?.['preferred_username'] }})!
+    </p>
 
-      <nav class="portal__destinations">
-        @if (hasRole('COORDENADOR')) {
-          <a routerLink="/coordenador" class="destination">
-            <span class="destination__label">Área do coordenador</span>
-            <span class="destination__hint">Criar, editar e gerenciar aulas da matriz</span>
-          </a>
-        }
-        @if (hasRole('ALUNO')) {
-          <a routerLink="/aluno" class="destination">
-            <span class="destination__label">Área do aluno</span>
-            <span class="destination__hint">Consultar e realizar matrículas</span>
-          </a>
-        }
-      </nav>
+    <nav class="portal__destinations">
+      @if (hasRole('COORDENADOR')) {
+      <a routerLink="/coordenador" class="destination">
+        <span class="destination__label">Área do coordenador</span>
+        <span class="destination__hint"
+          >Criar, editar e gerenciar aulas da matriz</span
+        >
+      </a>
+      } @if (hasRole('ALUNO')) {
+      <a routerLink="/aluno" class="destination">
+        <span class="destination__label">Área do aluno</span>
+        <span class="destination__hint">Consultar e realizar matrículas</span>
+      </a>
+      }
+    </nav>
 
-      <button type="button" class="portal__logout" (click)="logout()">Sair</button>
+    <button type="button" class="portal__logout" (click)="logout()">
+      Sair
+    </button>
     } @else {
-      <p class="portal__subtitle">Entre com sua conta institucional para continuar.</p>
-      <button type="button" class="portal__enter" (click)="login()">Entrar</button>
+    <p class="portal__subtitle">
+      Entre com sua conta institucional para continuar.
+    </p>
+    <button type="button" class="portal__enter" (click)="login()">
+      Entrar
+    </button>
     }
   </div>
 </div>

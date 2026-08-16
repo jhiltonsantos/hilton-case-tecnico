@@ -105,10 +105,10 @@
 .portal__logout {
   width: 100%;
   padding: 0.6rem 1.25rem;
-  border: 1px solid var(--brand-border);
+  border: 1px solid #7f1d1d;
   border-radius: 8px;
   background: transparent;
-  color: var(--brand-muted);
+  color: #f87171;
   font-family: var(--brand-sans);
   font-weight: 500;
   font-size: 0.85rem;
@@ -117,6 +117,6 @@
 }
 
 .portal__logout:hover {
-  border-color: var(--brand-muted);
-  color: var(--brand-ink);
+  border-color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
 }
