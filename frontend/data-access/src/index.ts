@@ -1,5 +1,7 @@
 export * from './lib/data-access/data-access';
 
+export * from './lib/config/api-base-url.token';
+
 export * from './lib/models/aula.model';
 export * from './lib/models/catalogo.model';
 export * from './lib/models/aluno.model';

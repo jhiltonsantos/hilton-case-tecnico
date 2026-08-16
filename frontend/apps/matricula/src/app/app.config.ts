@@ -8,6 +8,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
+import { API_BASE_URL } from '@frontend/data-access';
 
 const MatriculaPreset = definePreset(Aura, {
   semantic: {
@@ -50,6 +51,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideAnimationsAsync(),
     providePrimeNG({ theme: { preset: MatriculaPreset } }),
+    { provide: API_BASE_URL, useValue: 'http://localhost:8080' },
     provideKeycloak({
       config: {
         url: 'http://localhost:8081',
