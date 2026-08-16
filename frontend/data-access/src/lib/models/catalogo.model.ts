@@ -25,3 +25,20 @@ export interface Horario {
   horarioInicio: string;
   horarioFim: string;
 }
+
+const DIA_SEMANA_LABEL: Record<DiaSemana, string> = {
+  SEGUNDA: 'Segunda',
+  TERCA: 'Terça',
+  QUARTA: 'Quarta',
+  QUINTA: 'Quinta',
+  SEXTA: 'Sexta',
+  SABADO: 'Sábado',
+};
+
+function semSegundos(hora: string): string {
+  return hora.slice(0, 5);
+}
+
+export function formatarHorario(horario: Horario): string {
+  return `${DIA_SEMANA_LABEL[horario.diaSemana]} ${semSegundos(horario.horarioInicio)}–${semSegundos(horario.horarioFim)}`;
+}
