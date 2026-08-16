@@ -29,6 +29,24 @@
   --pf-v5-global--FontFamily--heading--sans-serif: var(--brand-serif);
 }
 
+.pf-v5-c-login {
+  --pf-v5-c-login__main--BackgroundColor: var(--brand-surface);
+  --pf-v5-c-login__main--BoxShadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6);
+  --pf-v5-c-login__main-header--PaddingTop: 0;
+  --pf-v5-c-login__main-header--PaddingBottom: 0;
+  --pf-v5-c-login__main-header--PaddingLeft: 2.25rem;
+  --pf-v5-c-login__main-header--PaddingRight: 2.25rem;
+  --pf-v5-c-login__main-body--PaddingBottom: 2.5rem;
+  --pf-v5-c-login__main-body--PaddingLeft: 2.25rem;
+  --pf-v5-c-login__main-body--PaddingRight: 2.25rem;
+  /* O PatternFly aplica uma margem grande (3rem no breakpoint xl) embaixo do
+     brand via `.pf-v5-c-login__header .pf-v5-c-brand` - seletor mais
+     especifico que `.pf-v5-c-brand` sozinho, entao só um `margin-bottom: 0`
+     direto na classe não vencia. Zerando aqui, na mesma variavel. */
+  --pf-v5-c-login__header--c-brand--MarginBottom: 0;
+  --pf-v5-c-login__header--c-brand--xl--MarginBottom: 0;
+}
+
 html,
 body {
   background-color: var(--brand-bg) !important;
@@ -58,6 +76,7 @@ body {
   grid-template-areas: 'header' 'main' 'footer' !important;
   justify-items: center;
   justify-content: center;
+  row-gap: 0;
 }
 
 .pf-v5-c-login__header,
@@ -67,31 +86,42 @@ body {
 }
 
 .pf-v5-c-login__header {
-  width: 100%;
-  text-align: center;
-  margin-bottom: 1.5rem;
+  width: 26rem;
+  box-sizing: border-box;
+  text-align: left;
+  margin-bottom: 0;
+  padding: 2.5rem 2.25rem 0.15rem;
+  background-color: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
 }
 
 .pf-v5-c-brand {
+  display: block;
+  margin-bottom: 0;
   color: var(--brand-gold);
   text-transform: uppercase;
   letter-spacing: 0.18em;
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-family: var(--brand-sans);
 }
 
 .pf-v5-c-login__main {
-  background-color: transparent;
+  width: 26rem;
+  border: 1px solid var(--brand-border);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
 }
 
 .pf-v5-c-login__main-body,
 .pf-v5-c-card {
-  background-color: var(--brand-surface) !important;
-  border: 1px solid var(--brand-border);
-  border-radius: 12px;
-  box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6);
   color: var(--brand-ink);
+}
+
+.pf-v5-c-login__main-body {
+  padding-top: 1.75rem;
 }
 
 .pf-v5-c-title,
@@ -102,6 +132,13 @@ h3 {
   font-family: var(--brand-serif);
   color: var(--brand-ink);
   font-weight: 600;
+  font-size: 1.6rem;
+}
+
+.pf-v5-c-login__main-header .pf-v5-c-title {
+  margin: 0;
+  border-bottom: 1px solid var(--brand-border);
+  padding-bottom: 1.5rem;
 }
 
 label,
@@ -112,19 +149,64 @@ label,
   font-family: var(--brand-sans);
 }
 
-.pf-v5-c-form-control,
-input[type='text'],
-input[type='email'],
-input[type='password'] {
+.pf-v5-c-form-control {
   background-color: var(--brand-bg);
   border: 1px solid var(--brand-border);
-  color: var(--brand-ink);
   border-radius: 8px;
 }
 
-.pf-v5-c-form-control:focus {
+.pf-v5-c-form-control input,
+input[type='text'],
+input[type='email'],
+input[type='password'] {
+  background-color: transparent;
+  border: none;
+  color: var(--brand-ink);
+}
+
+.pf-v5-c-form-control:has(input:focus) {
   border-color: var(--brand-gold);
   box-shadow: 0 0 0 1px var(--brand-gold);
+}
+
+.pf-v5-c-form-control::before,
+.pf-v5-c-form-control::after {
+  display: none;
+}
+
+.pf-v5-c-input-group {
+  display: flex;
+  align-items: stretch;
+  background-color: var(--brand-bg);
+  border: 1px solid var(--brand-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pf-v5-c-input-group:has(input:focus) {
+  border-color: var(--brand-gold);
+  box-shadow: 0 0 0 1px var(--brand-gold);
+}
+
+.pf-v5-c-input-group .pf-v5-c-form-control {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  flex: 1;
+}
+
+.pf-v5-c-input-group .pf-v5-c-button.pf-m-control {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--brand-muted);
+  padding: 0 0.75rem;
+}
+
+.pf-v5-c-input-group .pf-v5-c-button.pf-m-control:hover {
+  color: var(--brand-gold);
 }
 
 a,
@@ -136,8 +218,6 @@ a:hover {
   filter: brightness(1.1);
 }
 
-/* Base compartilhada dos botoes (mesmo padrao de tamanho/fonte de home.scss:
-   %portal-button) - so muda cor/fundo/borda por variante */
 .pf-v5-c-button.pf-m-primary,
 button[type='submit'],
 .pf-v5-c-button.pf-m-secondary,
