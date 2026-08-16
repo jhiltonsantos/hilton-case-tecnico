@@ -2,6 +2,7 @@ package br.com.jhiltonsantos.matricula.resource
 
 import br.com.jhiltonsantos.matricula.dto.AlunoPerfilResponse
 import br.com.jhiltonsantos.matricula.repository.AlunoRepository
+import br.com.jhiltonsantos.matricula.repository.CursoRepository
 import jakarta.annotation.security.RolesAllowed
 import jakarta.inject.Inject
 import jakarta.ws.rs.GET
@@ -22,6 +23,7 @@ import java.util.UUID
 @RolesAllowed("ALUNO")
 class AlunoResource(
     private val alunoRepository: AlunoRepository,
+    private val cursoRepository: CursoRepository
 ) {
     @Inject
     lateinit var jwt: JsonWebToken
@@ -32,6 +34,7 @@ class AlunoResource(
     @Path("perfil")
     fun perfil(): AlunoPerfilResponse {
         val aluno = alunoRepository.findById(UUID.fromString(jwt.subject))!!
-        return AlunoPerfilResponse(aluno.id!!, aluno.nome, aluno.cursoId)
+        val curso = cursoRepository.findById(aluno.cursoId)!!
+        return AlunoPerfilResponse(aluno.id!!, aluno.nome, aluno.cursoId, curso.nome)
     }
 }
