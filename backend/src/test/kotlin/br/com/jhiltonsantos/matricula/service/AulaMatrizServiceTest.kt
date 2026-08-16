@@ -3,6 +3,7 @@ package br.com.jhiltonsantos.matricula.service
 import br.com.jhiltonsantos.matricula.domain.AulaCursoAutorizado
 import br.com.jhiltonsantos.matricula.domain.AulaMatriz
 import br.com.jhiltonsantos.matricula.domain.Curso
+import br.com.jhiltonsantos.matricula.domain.DiaSemana
 import br.com.jhiltonsantos.matricula.domain.Disciplina
 import br.com.jhiltonsantos.matricula.domain.Horario
 import br.com.jhiltonsantos.matricula.domain.Professor
@@ -27,6 +28,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.LocalTime
 import java.util.UUID
 
 class AulaMatrizServiceTest {
@@ -55,10 +57,11 @@ class AulaMatrizServiceTest {
 
     @BeforeEach
     fun stubEntidadesExistentes() {
-        every { disciplinaRepository.findById(disciplinaId) } returns mockk<Disciplina>()
-        every { professorRepository.findById(professorId) } returns mockk<Professor>()
-        every { horarioRepository.findById(horarioId) } returns mockk<Horario>()
-        every { cursoRepository.findById(cursoId) } returns mockk<Curso>()
+        every { disciplinaRepository.findById(disciplinaId) } returns Disciplina("Disciplina Teste").apply { id = disciplinaId }
+        every { professorRepository.findById(professorId) } returns Professor("Professor Teste").apply { id = professorId }
+        every { horarioRepository.findById(horarioId) } returns
+            Horario(DiaSemana.SEGUNDA, LocalTime.of(8, 0), LocalTime.of(10, 0)).apply { id = horarioId }
+        every { cursoRepository.findById(cursoId) } returns Curso("Curso Teste").apply { id = cursoId }
         every { aulaCursoAutorizadoRepository.persist(any<AulaCursoAutorizado>()) } just Runs
     }
 
@@ -99,7 +102,8 @@ class AulaMatrizServiceTest {
             AulaMatriz(disciplinaId, professorId, horarioId, coordenadorId, vagasMaximas = 10).apply { id = aulaId }
 
         every { aulaMatrizRepository.findByIdAtivo(aulaId) } returns aulaExistente
-        every { horarioRepository.findById(novoHorarioId) } returns mockk<Horario>()
+        every { horarioRepository.findById(novoHorarioId) } returns
+            Horario(DiaSemana.TERCA, LocalTime.of(14, 0), LocalTime.of(16, 0)).apply { id = novoHorarioId }
         every {
             aulaMatrizRepository.existeAtivaComDisciplinaEHorario(
                 disciplinaId,

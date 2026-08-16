@@ -38,17 +38,17 @@ class AulaMatrizService(
 ) {
     @Transactional
     fun criar(request: CriarAulaRequest, coordenadorId: UUID): AulaMatriz {
-        disciplinaRepository.findById(request.disciplinaId)
+        val disciplina = disciplinaRepository.findById(request.disciplinaId)
             ?: throw DisciplinaNaoEncontradaException(request.disciplinaId)
         professorRepository.findById(request.professorId)
             ?: throw ProfessorNaoEncontradoException(request.professorId)
-        horarioRepository.findById(request.horarioId)
+        val horario = horarioRepository.findById(request.horarioId)
             ?: throw HorarioNaoEncontradoException(request.horarioId)
         request.cursosAutorizados.forEach { cursoId ->
             cursoRepository.findById(cursoId) ?: throw CursoNaoEncontradoException(cursoId)
         }
         if (aulaMatrizRepository.existeAtivaComDisciplinaEHorario(request.disciplinaId, request.horarioId)) {
-            throw DisciplinaJaOfertadaNoHorarioException(request.disciplinaId, request.horarioId)
+            throw DisciplinaJaOfertadaNoHorarioException(disciplina.nome, horario.descricao())
         }
 
         val aula = AulaMatriz(
@@ -73,13 +73,14 @@ class AulaMatrizService(
 
         professorRepository.findById(request.professorId)
             ?: throw ProfessorNaoEncontradoException(request.professorId)
-        horarioRepository.findById(request.horarioId)
+        val horario = horarioRepository.findById(request.horarioId)
             ?: throw HorarioNaoEncontradoException(request.horarioId)
         request.cursosAutorizados.forEach { cursoId ->
             cursoRepository.findById(cursoId) ?: throw CursoNaoEncontradoException(cursoId)
         }
         if (aulaMatrizRepository.existeAtivaComDisciplinaEHorario(aula.disciplinaId, request.horarioId, excluirId = id)) {
-            throw DisciplinaJaOfertadaNoHorarioException(aula.disciplinaId, request.horarioId)
+            val disciplina = disciplinaRepository.findById(aula.disciplinaId)
+            throw DisciplinaJaOfertadaNoHorarioException(disciplina?.nome ?: aula.disciplinaId.toString(), horario.descricao())
         }
 
         aula.professorId = request.professorId
@@ -97,8 +98,16 @@ class AulaMatrizService(
         if (aula.coordenadorId != coordenadorId) {
             throw AcessoNegadoException("Aula nao pertence a este coordenador")
         }
-        if (!aula.podeSerExcluida()) throw AulaComMatriculadosException(id)
+        if (!aula.podeSerExcluida()) throw AulaComMatriculadosException(descricao(aula))
         aula.ativo = false
+    }
+
+    fun descricao(aula: AulaMatriz): String {
+        val disciplina = disciplinaRepository.findById(aula.disciplinaId)
+        val horario = horarioRepository.findById(aula.horarioId)
+        val nomeDisciplina = disciplina?.nome ?: aula.disciplinaId.toString()
+        val descricaoHorario = horario?.descricao() ?: aula.horarioId.toString()
+        return "$nomeDisciplina ($descricaoHorario)"
     }
 
     fun pesquisar(

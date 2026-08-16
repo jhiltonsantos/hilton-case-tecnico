@@ -2,6 +2,7 @@ package br.com.jhiltonsantos.matricula.service
 
 import br.com.jhiltonsantos.matricula.domain.Aluno
 import br.com.jhiltonsantos.matricula.domain.AulaMatriz
+import br.com.jhiltonsantos.matricula.domain.Curso
 import br.com.jhiltonsantos.matricula.domain.DiaSemana
 import br.com.jhiltonsantos.matricula.domain.Horario
 import br.com.jhiltonsantos.matricula.domain.Matricula
@@ -11,6 +12,7 @@ import br.com.jhiltonsantos.matricula.domain.exception.VagaIndisponivelException
 import br.com.jhiltonsantos.matricula.dto.MatricularRequest
 import br.com.jhiltonsantos.matricula.repository.AlunoRepository
 import br.com.jhiltonsantos.matricula.repository.AulaMatrizRepository
+import br.com.jhiltonsantos.matricula.repository.CursoRepository
 import br.com.jhiltonsantos.matricula.repository.HorarioRepository
 import br.com.jhiltonsantos.matricula.repository.MatriculaRepository
 import io.mockk.Runs
@@ -32,6 +34,7 @@ class MatriculaServiceTest {
     private val aulaMatrizService = mockk<AulaMatrizService>()
     private val alunoRepository = mockk<AlunoRepository>()
     private val horarioRepository = mockk<HorarioRepository>()
+    private val cursoRepository = mockk<CursoRepository>()
 
     private val service = MatriculaService(
         matriculaRepository,
@@ -39,6 +42,7 @@ class MatriculaServiceTest {
         aulaMatrizService,
         alunoRepository,
         horarioRepository,
+        cursoRepository,
     )
 
     private val alunoId = UUID.randomUUID()
@@ -64,6 +68,8 @@ class MatriculaServiceTest {
         every { aulaMatrizService.cursosAutorizadosDe(aulaId) } returns listOf(cursoDoAluno)
         every { horarioRepository.findById(horarioId) } returns horarioDaAula
         every { matriculaRepository.ativasDoAluno(alunoId) } returns emptyList()
+        every { cursoRepository.findById(cursoDoAluno) } returns Curso("Curso Teste").apply { id = cursoDoAluno }
+        every { aulaMatrizService.descricao(aula) } returns "Disciplina Teste (Segunda 08:00-10:00)"
     }
 
     @Test
@@ -89,6 +95,7 @@ class MatriculaServiceTest {
         every { matriculaRepository.ativasDoAluno(alunoId) } returns listOf(matriculaAtiva)
         every { aulaMatrizRepository.findById(outraAulaId) } returns outraAula
         every { horarioRepository.findById(outroHorarioId) } returns outroHorario
+        every { aulaMatrizService.descricao(outraAula) } returns "Outra Disciplina (Segunda 09:00-11:00)"
 
         assertThrows(ChoqueDeHorarioException::class.java) {
             service.matricular(alunoId, MatricularRequest(aulaId))
