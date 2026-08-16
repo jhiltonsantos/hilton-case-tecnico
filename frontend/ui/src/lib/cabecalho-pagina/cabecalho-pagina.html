@@ -1,0 +1,31 @@
+<header class="cabecalho-pagina">
+  <div class="cabecalho-pagina__acoes">
+    <button type="button" class="icone-botao" title="Voltar" (click)="voltar()">
+      <i class="pi pi-arrow-left"></i>
+    </button>
+
+    <div class="cabecalho-pagina__usuario-acoes">
+      <span class="cabecalho-pagina__usuario">{{ username() }}</span>
+      <button type="button" class="icone-botao" title="Perfil" (click)="irParaPerfil()">
+        <i class="pi pi-user"></i>
+      </button>
+      <button type="button" class="icone-botao icone-botao--sair" title="Sair" (click)="sair()">
+        <i class="pi pi-sign-out"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="cabecalho-pagina__linha">
+    <div class="cabecalho-pagina__texto">
+      <p class="cabecalho-pagina__eyebrow">{{ eyebrow() }}</p>
+      <h1 class="cabecalho-pagina__titulo">{{ titulo() }}</h1>
+      @if (subtitulo()) {
+        <p class="cabecalho-pagina__subtitulo">{{ subtitulo() }}</p>
+      }
+    </div>
+
+    <div class="cabecalho-pagina__extra">
+      <ng-content />
+    </div>
+  </div>
+</header>
