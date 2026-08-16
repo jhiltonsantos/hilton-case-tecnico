@@ -14,15 +14,17 @@ import {
   Aula,
   Curso,
   Disciplina,
+  formatarHorario,
   Horario,
   Matricula,
   Professor,
 } from '@frontend/data-access';
+import { CabecalhoPagina } from '@frontend/ui';
 
 @Component({
   selector: 'lib-matricula-aluno',
   standalone: true,
-  imports: [CommonModule, TableModule, ButtonModule, TagModule, ToastModule],
+  imports: [CommonModule, TableModule, ButtonModule, TagModule, ToastModule, CabecalhoPagina],
   providers: [MessageService],
   templateUrl: './matricula-aluno.html',
   styleUrl: './matricula-aluno.scss',
@@ -100,6 +102,6 @@ export class MatriculaAluno implements OnInit {
 
   horarioLabel(id: string): string {
     const horario = this.horarios().find((h) => h.id === id);
-    return horario ? `${horario.diaSemana} ${horario.horarioInicio}-${horario.horarioFim}` : id;
+    return horario ? formatarHorario(horario) : id;
   }
 }

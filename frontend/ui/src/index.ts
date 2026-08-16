@@ -1,1 +1,1 @@
-export * from './lib/ui/ui';
+export * from './lib/cabecalho-pagina/cabecalho-pagina';

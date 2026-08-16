@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TableModule } from 'primeng/table';
@@ -10,7 +10,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Aula, AulaService, CatalogoService, Curso, Disciplina, Horario, Professor } from '@frontend/data-access';
+import { Aula, AulaService, CatalogoService, Curso, Disciplina, formatarHorario, Horario, Professor } from '@frontend/data-access';
+import { CabecalhoPagina } from '@frontend/ui';
 
 @Component({
   selector: 'lib-aulas-coordenador',
@@ -26,6 +27,7 @@ import { Aula, AulaService, CatalogoService, Curso, Disciplina, Horario, Profess
     InputNumberModule,
     ConfirmDialogModule,
     ToastModule,
+    CabecalhoPagina,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './aulas-coordenador.html',
@@ -42,6 +44,9 @@ export class AulasCoordenador implements OnInit {
   disciplinas = signal<Disciplina[]>([]);
   professores = signal<Professor[]>([]);
   horarios = signal<Horario[]>([]);
+  horariosOptions = computed(() =>
+    this.horarios().map((h) => ({ ...h, label: formatarHorario(h) })),
+  );
   cursos = signal<Curso[]>([]);
 
   dialogAberto = signal(false);
@@ -77,7 +82,7 @@ export class AulasCoordenador implements OnInit {
 
   horarioLabel(id: string): string {
     const horario = this.horarios().find((h) => h.id === id);
-    return horario ? `${horario.diaSemana} ${horario.horarioInicio}-${horario.horarioFim}` : id;
+    return horario ? formatarHorario(horario) : id;
   }
 
   abrirNovaAula(): void {
