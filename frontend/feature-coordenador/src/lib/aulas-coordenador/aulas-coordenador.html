@@ -118,6 +118,9 @@
   [header]="aulaEmEdicao() ? 'Editar aula' : 'Nova aula'"
 >
   <form [formGroup]="form" (ngSubmit)="salvar()" class="form-aula">
+    @if (aulaEmEdicao(); as aula) {
+      <p class="form-aula__id">ID: {{ aula.id }}</p>
+    }
     @if (!aulaEmEdicao()) {
       <label class="campo">
         <span class="campo__rotulo">Disciplina</span>

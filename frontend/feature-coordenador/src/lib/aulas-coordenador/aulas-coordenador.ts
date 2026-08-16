@@ -205,7 +205,12 @@ export class AulasCoordenador implements OnInit {
 
   confirmarExclusao(aula: Aula): void {
     this.confirmationService.confirm({
-      message: `Excluir a aula de ${this.nomeDisciplina(aula.disciplinaId)}?`,
+      header: 'Excluir aula',
+      message: `Excluir a aula de ${this.nomeDisciplina(aula.disciplinaId)}?<br><small style="opacity: 0.7">ID: ${aula.id}</small>`,
+      acceptLabel: 'Sim',
+      rejectLabel: 'Não',
+      acceptButtonProps: { severity: 'danger' },
+      rejectButtonProps: { severity: 'secondary', text: true },
       accept: () => this.excluir(aula.id),
     });
   }

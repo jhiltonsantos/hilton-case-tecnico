@@ -109,6 +109,13 @@
   padding-top: 0.25rem;
 }
 
+.form-aula__id {
+  margin: 0;
+  font-family: var(--brand-sans);
+  font-size: 0.75rem;
+  color: var(--brand-muted);
+}
+
 .campo {
   display: flex;
   flex-direction: column;
