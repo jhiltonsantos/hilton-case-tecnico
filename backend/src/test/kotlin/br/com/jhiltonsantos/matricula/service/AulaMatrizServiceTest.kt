@@ -9,8 +9,13 @@ import br.com.jhiltonsantos.matricula.domain.Horario
 import br.com.jhiltonsantos.matricula.domain.Professor
 import br.com.jhiltonsantos.matricula.domain.exception.AcessoNegadoException
 import br.com.jhiltonsantos.matricula.domain.exception.AulaComMatriculadosException
+import br.com.jhiltonsantos.matricula.domain.exception.AulaNaoEncontradaException
+import br.com.jhiltonsantos.matricula.domain.exception.CursoNaoEncontradoException
 import br.com.jhiltonsantos.matricula.domain.exception.DisciplinaJaOfertadaNoHorarioException
 import br.com.jhiltonsantos.matricula.domain.exception.DisciplinaNaoEncontradaException
+import br.com.jhiltonsantos.matricula.domain.exception.HorarioNaoEncontradoException
+import br.com.jhiltonsantos.matricula.domain.exception.ProfessorJaAlocadoNoHorarioException
+import br.com.jhiltonsantos.matricula.domain.exception.ProfessorNaoEncontradoException
 import br.com.jhiltonsantos.matricula.dto.AtualizarAulaRequest
 import br.com.jhiltonsantos.matricula.dto.CriarAulaRequest
 import br.com.jhiltonsantos.matricula.repository.AulaCursoAutorizadoRepository
@@ -63,6 +68,8 @@ class AulaMatrizServiceTest {
             Horario(DiaSemana.SEGUNDA, LocalTime.of(8, 0), LocalTime.of(10, 0)).apply { id = horarioId }
         every { cursoRepository.findById(cursoId) } returns Curso("Curso Teste").apply { id = cursoId }
         every { aulaCursoAutorizadoRepository.persist(any<AulaCursoAutorizado>()) } just Runs
+        // Padrao "sem conflito de professor"; os testes da regra sobrescrevem quando precisam.
+        every { aulaMatrizRepository.existeAtivaComProfessorEHorario(any(), any(), any()) } returns false
     }
 
     @Test
@@ -183,4 +190,162 @@ class AulaMatrizServiceTest {
         }
     }
 
+    // --- Validacao das entidades referenciadas na criacao (regra "criar deve validar existencia") ---
+
+    @Test
+    fun `criar lanca ProfessorNaoEncontradoException quando professor nao existe`() {
+        val professorInexistente = UUID.randomUUID()
+        every { professorRepository.findById(professorInexistente) } returns null
+
+        assertThrows(ProfessorNaoEncontradoException::class.java) {
+            service.criar(
+                CriarAulaRequest(disciplinaId, professorInexistente, horarioId, listOf(cursoId), vagasMaximas = 10),
+                coordenadorId,
+            )
+        }
+        verify(exactly = 0) { aulaMatrizRepository.persist(any<AulaMatriz>()) }
+    }
+
+    @Test
+    fun `criar lanca HorarioNaoEncontradoException quando horario nao existe`() {
+        val horarioInexistente = UUID.randomUUID()
+        every { horarioRepository.findById(horarioInexistente) } returns null
+
+        assertThrows(HorarioNaoEncontradoException::class.java) {
+            service.criar(
+                CriarAulaRequest(disciplinaId, professorId, horarioInexistente, listOf(cursoId), vagasMaximas = 10),
+                coordenadorId,
+            )
+        }
+        verify(exactly = 0) { aulaMatrizRepository.persist(any<AulaMatriz>()) }
+    }
+
+    @Test
+    fun `criar lanca CursoNaoEncontradoException quando um dos cursos autorizados nao existe`() {
+        val cursoInexistente = UUID.randomUUID()
+        every { cursoRepository.findById(cursoInexistente) } returns null
+
+        assertThrows(CursoNaoEncontradoException::class.java) {
+            service.criar(
+                CriarAulaRequest(
+                    disciplinaId,
+                    professorId,
+                    horarioId,
+                    listOf(cursoId, cursoInexistente),
+                    vagasMaximas = 10,
+                ),
+                coordenadorId,
+            )
+        }
+        verify(exactly = 0) { aulaMatrizRepository.persist(any<AulaMatriz>()) }
+    }
+
+    // --- Validacao das entidades referenciadas na edicao ---
+
+    @Test
+    fun `editar lanca AulaNaoEncontradaException quando a aula nao existe ou esta inativa`() {
+        val aulaId = UUID.randomUUID()
+        every { aulaMatrizRepository.findByIdAtivo(aulaId) } returns null
+
+        assertThrows(AulaNaoEncontradaException::class.java) {
+            service.editar(aulaId, coordenadorId, AtualizarAulaRequest(professorId, horarioId, listOf(cursoId)))
+        }
+    }
+
+    @Test
+    fun `editar lanca AcessoNegadoException quando a aula nao pertence ao coordenador`() {
+        val aulaId = UUID.randomUUID()
+        val donoReal = UUID.randomUUID()
+        val aulaDeOutroCoordenador = AulaMatriz(disciplinaId, professorId, horarioId, donoReal, vagasMaximas = 10)
+            .apply { id = aulaId }
+        every { aulaMatrizRepository.findByIdAtivo(aulaId) } returns aulaDeOutroCoordenador
+
+        assertThrows(AcessoNegadoException::class.java) {
+            service.editar(aulaId, coordenadorId, AtualizarAulaRequest(professorId, horarioId, listOf(cursoId)))
+        }
+    }
+
+    @Test
+    fun `editar lanca HorarioNaoEncontradoException quando o novo horario nao existe`() {
+        val aulaId = UUID.randomUUID()
+        val horarioInexistente = UUID.randomUUID()
+        val aula = AulaMatriz(disciplinaId, professorId, horarioId, coordenadorId, vagasMaximas = 10)
+            .apply { id = aulaId }
+        every { aulaMatrizRepository.findByIdAtivo(aulaId) } returns aula
+        every { horarioRepository.findById(horarioInexistente) } returns null
+
+        assertThrows(HorarioNaoEncontradoException::class.java) {
+            service.editar(aulaId, coordenadorId, AtualizarAulaRequest(professorId, horarioInexistente, listOf(cursoId)))
+        }
+        assertEquals(horarioId, aula.horarioId)
+    }
+
+    @Test
+    fun `editar lanca CursoNaoEncontradoException quando um dos cursos nao existe`() {
+        val aulaId = UUID.randomUUID()
+        val cursoInexistente = UUID.randomUUID()
+        val aula = AulaMatriz(disciplinaId, professorId, horarioId, coordenadorId, vagasMaximas = 10)
+            .apply { id = aulaId }
+        every { aulaMatrizRepository.findByIdAtivo(aulaId) } returns aula
+        every { cursoRepository.findById(cursoInexistente) } returns null
+
+        assertThrows(CursoNaoEncontradoException::class.java) {
+            service.editar(aulaId, coordenadorId, AtualizarAulaRequest(professorId, horarioId, listOf(cursoInexistente)))
+        }
+    }
+
+    // --- Regra extra: um professor nao pode ter duas aulas no mesmo horario ---
+
+    @Test
+    fun `criar lanca ProfessorJaAlocadoNoHorarioException quando o professor ja tem outra aula nesse horario`() {
+        every { aulaMatrizRepository.existeAtivaComDisciplinaEHorario(disciplinaId, horarioId, null) } returns false
+        every { aulaMatrizRepository.existeAtivaComProfessorEHorario(professorId, horarioId, null) } returns true
+
+        assertThrows(ProfessorJaAlocadoNoHorarioException::class.java) {
+            service.criar(
+                CriarAulaRequest(disciplinaId, professorId, horarioId, listOf(cursoId), vagasMaximas = 10),
+                coordenadorId,
+            )
+        }
+        verify(exactly = 0) { aulaMatrizRepository.persist(any<AulaMatriz>()) }
+    }
+
+    @Test
+    fun `criar aceita o mesmo professor quando o horario e diferente`() {
+        val outroHorarioId = UUID.randomUUID()
+        every { horarioRepository.findById(outroHorarioId) } returns
+            Horario(DiaSemana.TERCA, LocalTime.of(14, 0), LocalTime.of(16, 0)).apply { id = outroHorarioId }
+        every { aulaMatrizRepository.existeAtivaComDisciplinaEHorario(disciplinaId, outroHorarioId, null) } returns false
+        every { aulaMatrizRepository.existeAtivaComProfessorEHorario(professorId, outroHorarioId, null) } returns false
+        every { aulaMatrizRepository.persist(any<AulaMatriz>()) } answers {
+            firstArg<AulaMatriz>().id = UUID.randomUUID()
+        }
+
+        val aula = service.criar(
+            CriarAulaRequest(disciplinaId, professorId, outroHorarioId, listOf(cursoId), vagasMaximas = 10),
+            coordenadorId,
+        )
+
+        assertEquals(professorId, aula.professorId)
+        verify(exactly = 1) { aulaMatrizRepository.persist(any<AulaMatriz>()) }
+    }
+
+    @Test
+    fun `editar lanca ProfessorJaAlocadoNoHorarioException quando o novo professor ja tem aula nesse horario`() {
+        val aulaId = UUID.randomUUID()
+        val novoProfessorId = UUID.randomUUID()
+        val aula = AulaMatriz(disciplinaId, professorId, horarioId, coordenadorId, vagasMaximas = 10)
+            .apply { id = aulaId }
+
+        every { aulaMatrizRepository.findByIdAtivo(aulaId) } returns aula
+        every { professorRepository.findById(novoProfessorId) } returns
+            Professor("Outro Professor").apply { id = novoProfessorId }
+        every { aulaMatrizRepository.existeAtivaComDisciplinaEHorario(disciplinaId, horarioId, aulaId) } returns false
+        every { aulaMatrizRepository.existeAtivaComProfessorEHorario(novoProfessorId, horarioId, aulaId) } returns true
+
+        assertThrows(ProfessorJaAlocadoNoHorarioException::class.java) {
+            service.editar(aulaId, coordenadorId, AtualizarAulaRequest(novoProfessorId, horarioId, listOf(cursoId)))
+        }
+        assertEquals(professorId, aula.professorId)
+    }
 }

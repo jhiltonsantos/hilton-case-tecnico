@@ -46,4 +46,10 @@ class AulaMatrizRepository : PanacheRepositoryBase<AulaMatriz, UUID> {
             disciplinaId, horarioId, excluirId,
         ).count() > 0
 
+    fun existeAtivaComProfessorEHorario(professorId: UUID, horarioId: UUID, excluirId: UUID? = null): Boolean =
+        find(
+            "professorId = ?1 and horarioId = ?2 and ativo = true and (?3 is null or id != ?3)",
+            professorId, horarioId, excluirId,
+        ).count() > 0
+
 }

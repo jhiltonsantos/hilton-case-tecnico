@@ -16,3 +16,6 @@ class VagaIndisponivelException(aulaDescricao: String) :
 
 class DisciplinaJaOfertadaNoHorarioException(disciplinaNome: String, horarioDescricao: String) :
     RegraNegocioException(mensagem = "Disciplina '$disciplinaNome' ja ofertada no horario: $horarioDescricao")
+
+class ProfessorJaAlocadoNoHorarioException(professorNome: String, horarioDescricao: String) :
+    RegraNegocioException(mensagem = "Professor '$professorNome' ja possui outra aula no horario: $horarioDescricao")
