@@ -6,6 +6,8 @@ import br.com.jhiltonsantos.matricula.domain.Curso
 import br.com.jhiltonsantos.matricula.domain.DiaSemana
 import br.com.jhiltonsantos.matricula.domain.Horario
 import br.com.jhiltonsantos.matricula.domain.Matricula
+import br.com.jhiltonsantos.matricula.domain.exception.AlunoNaoEncontradoException
+import br.com.jhiltonsantos.matricula.domain.exception.AulaNaoEncontradaException
 import br.com.jhiltonsantos.matricula.domain.exception.ChoqueDeHorarioException
 import br.com.jhiltonsantos.matricula.domain.exception.CursoNaoAutorizadoException
 import br.com.jhiltonsantos.matricula.domain.exception.VagaIndisponivelException
@@ -119,6 +121,52 @@ class MatriculaServiceTest {
         val matricula = service.matricular(alunoId, MatricularRequest(aulaId))
 
         assertEquals(alunoId, matricula.alunoId)
+        assertEquals(aulaId, matricula.aulaMatrizId)
+        verify(exactly = 1) { matriculaRepository.persist(any<Matricula>()) }
+    }
+
+    @Test
+    fun `lanca AulaNaoEncontradaException quando a aula nao existe ou esta inativa`() {
+        val aulaInexistente = UUID.randomUUID()
+        every { aulaMatrizRepository.findByIdAtivo(aulaInexistente) } returns null
+
+        assertThrows(AulaNaoEncontradaException::class.java) {
+            service.matricular(alunoId, MatricularRequest(aulaInexistente))
+        }
+        verify(exactly = 0) { aulaMatrizRepository.ocuparVaga(any()) }
+    }
+
+    @Test
+    fun `lanca AlunoNaoEncontradoException quando o aluno do token nao existe`() {
+        val alunoInexistente = UUID.randomUUID()
+        every { alunoRepository.findById(alunoInexistente) } returns null
+
+        assertThrows(AlunoNaoEncontradoException::class.java) {
+            service.matricular(alunoInexistente, MatricularRequest(aulaId))
+        }
+        verify(exactly = 0) { aulaMatrizRepository.ocuparVaga(any()) }
+    }
+
+    @Test
+    fun `nao lanca choque de horario quando a mesma faixa de hora cai em dia da semana diferente`() {
+        val outraAulaId = UUID.randomUUID()
+        val outroHorarioId = UUID.randomUUID()
+        val outraAula =
+            AulaMatriz(UUID.randomUUID(), UUID.randomUUID(), outroHorarioId, UUID.randomUUID(), vagasMaximas = 10)
+                .apply { id = outraAulaId }
+        // Mesma faixa de horario da aula alvo (08:00-10:00), mas em outro dia da semana.
+        val outroHorario =
+            Horario(DiaSemana.TERCA, LocalTime.of(8, 0), LocalTime.of(10, 0)).apply { id = outroHorarioId }
+        val matriculaAtiva = Matricula(alunoId = alunoId, aulaMatrizId = outraAulaId)
+
+        every { matriculaRepository.ativasDoAluno(alunoId) } returns listOf(matriculaAtiva)
+        every { aulaMatrizRepository.findById(outraAulaId) } returns outraAula
+        every { horarioRepository.findById(outroHorarioId) } returns outroHorario
+        every { aulaMatrizRepository.ocuparVaga(aulaId) } returns true
+        every { matriculaRepository.persist(any<Matricula>()) } just Runs
+
+        val matricula = service.matricular(alunoId, MatricularRequest(aulaId))
+
         assertEquals(aulaId, matricula.aulaMatrizId)
         verify(exactly = 1) { matriculaRepository.persist(any<Matricula>()) }
     }
