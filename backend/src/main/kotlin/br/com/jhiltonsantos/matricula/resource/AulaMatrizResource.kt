@@ -16,6 +16,8 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import java.time.LocalTime
 import java.util.UUID
 import org.eclipse.microprofile.openapi.annotations.Operation
+import org.eclipse.microprofile.openapi.annotations.media.Content
+import org.eclipse.microprofile.openapi.annotations.media.Schema
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
@@ -36,7 +38,11 @@ class AulaMatrizResource(private val aulaMatrizService: AulaMatrizService) {
         description = "Valida a existencia de disciplina, professor, horario e cursos autorizados. O coordenador dono e extraido do token JWT, nao vai no corpo da requisicao.",
     )
     @APIResponses(
-        APIResponse(responseCode = "201", description = "Aula criada"),
+        APIResponse(
+            responseCode = "201",
+            description = "Aula criada",
+            content = [Content(schema = Schema(implementation = AulaResponse::class))],
+        ),
         APIResponse(responseCode = "404", description = "Disciplina, professor, horario ou curso inexistente"),
         APIResponse(
             responseCode = "422",

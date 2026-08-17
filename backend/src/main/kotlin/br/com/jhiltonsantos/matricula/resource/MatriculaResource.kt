@@ -13,6 +13,8 @@ import jakarta.ws.rs.core.Response
 import org.eclipse.microprofile.jwt.JsonWebToken
 import java.util.UUID
 import org.eclipse.microprofile.openapi.annotations.Operation
+import org.eclipse.microprofile.openapi.annotations.media.Content
+import org.eclipse.microprofile.openapi.annotations.media.Schema
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
@@ -37,7 +39,11 @@ class MatriculaResource(
         description = "Valida curso, ausencia de problema de horario com outras matriculas ativas do aluno, e vaga disponivel.",
     )
     @APIResponses(
-        APIResponse(responseCode = "201", description = "Matricula criada"),
+        APIResponse(
+            responseCode = "201",
+            description = "Matricula criada",
+            content = [Content(schema = Schema(implementation = MatriculaResponse::class))],
+        ),
         APIResponse(responseCode = "404", description = "Aula ou aluno inexistente"),
         APIResponse(responseCode = "422", description = "Curso nao autorizado, choque de horario ou vaga indisponivel"),
         APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
