@@ -12,6 +12,7 @@ import jakarta.ws.rs.core.MediaType
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import java.util.UUID
@@ -29,7 +30,11 @@ class AlunoResource(
     lateinit var jwt: JsonWebToken
 
     @Operation(summary = "Retorna o perfil do aluno autenticado")
-    @APIResponse(responseCode = "200", description = "Perfil do aluno (id, nome, curso)")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Perfil do aluno (id, nome, curso)"),
+        APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
+        APIResponse(responseCode = "403", description = "Token sem role ALUNO"),
+    )
     @GET
     @Path("perfil")
     fun perfil(): AlunoPerfilResponse {

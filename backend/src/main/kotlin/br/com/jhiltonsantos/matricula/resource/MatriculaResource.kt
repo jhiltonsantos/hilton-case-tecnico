@@ -53,7 +53,11 @@ class MatriculaResource(
         summary = "Lista as matriculas ativas do aluno logado",
         description = "Retorna disciplina, professor e horario de cada aula em que o aluno esta matriculado.",
     )
-    @APIResponse(responseCode = "200", description = "Lista de matriculas ativas")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Lista de matriculas ativas"),
+        APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
+        APIResponse(responseCode = "403", description = "Token sem role ALUNO"),
+    )
     @GET
     fun minhasMatriculas(): List<MatriculaResponse> =
         matriculaService.minhasMatriculas(UUID.fromString(jwt.subject)).map { paraResponse(it) }
