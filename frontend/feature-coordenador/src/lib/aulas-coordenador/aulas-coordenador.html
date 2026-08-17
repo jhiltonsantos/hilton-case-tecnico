@@ -10,7 +10,68 @@
     <p-button label="Nova aula" icon="pi pi-plus" (onClick)="abrirNovaAula()" />
   </lib-cabecalho-pagina>
 
-  <p-table [value]="aulas()" dataKey="id" styleClass="tabela-aulas">
+  <form [formGroup]="filtroForm" (ngSubmit)="aplicarFiltros()" class="filtros">
+    <label class="campo">
+      <span class="campo__rotulo">Período do dia</span>
+      <p-select
+        formControlName="periodoDia"
+        [options]="periodoDiaOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Todos os períodos"
+        [showClear]="true"
+        appendTo="body"
+        (onChange)="onPeriodoDiaChange()"
+        (onClear)="onPeriodoDiaChange()"
+      />
+    </label>
+    <label class="campo campo--compacto">
+      <span class="campo__rotulo">Horário inicial</span>
+      <span class="campo-tempo">
+        <input type="time" formControlName="horarioInicio" (change)="onIntervaloChange()" />
+        @if (filtroForm.controls.horarioInicio.value) {
+          <button type="button" class="campo-tempo__limpar" title="Limpar" (click)="limparHorarioInicio()">
+            <i class="pi pi-times"></i>
+          </button>
+        }
+      </span>
+    </label>
+    <label class="campo campo--compacto">
+      <span class="campo__rotulo">Horário final</span>
+      <span class="campo-tempo">
+        <input type="time" formControlName="horarioFim" (change)="onIntervaloChange()" />
+        @if (filtroForm.controls.horarioFim.value) {
+          <button type="button" class="campo-tempo__limpar" title="Limpar" (click)="limparHorarioFim()">
+            <i class="pi pi-times"></i>
+          </button>
+        }
+      </span>
+    </label>
+    <label class="campo">
+      <span class="campo__rotulo">Curso autorizado</span>
+      <p-select
+        formControlName="cursoId"
+        [options]="cursos()"
+        optionLabel="nome"
+        optionValue="id"
+        [filter]="true"
+        filterBy="nome"
+        placeholder="Todos os cursos"
+        [showClear]="true"
+        appendTo="body"
+      />
+    </label>
+    <label class="campo campo--compacto">
+      <span class="campo__rotulo">Vagas máximas</span>
+      <p-inputnumber formControlName="vagasMaximas" [min]="1" placeholder="Ex.: 30" [inputStyle]="{ width: '100%' }" />
+    </label>
+    <div class="filtros__acoes">
+      <p-button type="button" icon="pi pi-filter-slash" severity="secondary" [text]="true" title="Limpar filtros" (onClick)="limparFiltros()" />
+      <p-button type="submit" label="Filtrar" icon="pi pi-filter" />
+    </div>
+  </form>
+
+  <p-table [value]="aulasOrdenadas()" dataKey="id" styleClass="tabela-aulas">
     <ng-template #header>
       <tr>
         <th>Disciplina</th>
@@ -36,8 +97,13 @@
       <tr>
         <td colspan="5">
           <div class="vazio">
-            <p class="vazio__titulo">Nenhuma aula cadastrada ainda</p>
-            <p class="vazio__texto">Clique em "Nova aula" para criar a primeira aula da sua matriz.</p>
+            @if (filtrosAtivos()) {
+              <p class="vazio__titulo">Nenhuma aula encontrada com esses filtros</p>
+              <p class="vazio__texto">Ajuste os filtros acima ou clique em "Limpar filtros".</p>
+            } @else {
+              <p class="vazio__titulo">Nenhuma aula cadastrada ainda</p>
+              <p class="vazio__texto">Clique em "Nova aula" para criar a primeira aula da sua matriz.</p>
+            }
           </div>
         </td>
       </tr>
@@ -52,6 +118,9 @@
   [header]="aulaEmEdicao() ? 'Editar aula' : 'Nova aula'"
 >
   <form [formGroup]="form" (ngSubmit)="salvar()" class="form-aula">
+    @if (aulaEmEdicao(); as aula) {
+      <p class="form-aula__id">ID: {{ aula.id }}</p>
+    }
     @if (!aulaEmEdicao()) {
       <label class="campo">
         <span class="campo__rotulo">Disciplina</span>

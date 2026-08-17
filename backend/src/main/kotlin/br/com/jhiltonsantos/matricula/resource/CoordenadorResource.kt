@@ -11,6 +11,7 @@ import jakarta.ws.rs.core.MediaType
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import java.util.UUID
@@ -27,7 +28,11 @@ class CoordenadorResource(
     lateinit var jwt: JsonWebToken
 
     @Operation(summary = "Retorna o perfil do coordenador autenticado")
-    @APIResponse(responseCode = "200", description = "Perfil do coordenador (id, nome)")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Perfil do coordenador (id, nome)"),
+        APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
+        APIResponse(responseCode = "403", description = "Token sem role COORDENADOR"),
+    )
     @GET
     @Path("perfil")
     fun perfil(): CoordenadorPerfilResponse {

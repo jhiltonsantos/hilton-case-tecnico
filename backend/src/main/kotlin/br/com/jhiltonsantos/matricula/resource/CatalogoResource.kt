@@ -15,6 +15,7 @@ import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 
@@ -31,28 +32,44 @@ class CatalogoResource(
 ) {
 
     @Operation(summary = "Lista todas as disciplinas cadastradas")
-    @APIResponse(responseCode = "200", description = "Lista de disciplinas")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Lista de disciplinas"),
+        APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
+        APIResponse(responseCode = "403", description = "Token sem role COORDENADOR ou ALUNO"),
+    )
     @GET
     @Path("disciplinas")
     fun disciplinas(): List<DisciplinaResponse> =
         disciplinaRepository.listAll().map { DisciplinaResponse(it.id!!, it.nome) }
 
     @Operation(summary = "Lista todos os professores cadastrados")
-    @APIResponse(responseCode = "200", description = "Lista de professores")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Lista de professores"),
+        APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
+        APIResponse(responseCode = "403", description = "Token sem role COORDENADOR ou ALUNO"),
+    )
     @GET
     @Path("professores")
     fun professores(): List<ProfessorResponse> =
         professorRepository.listAll().map { ProfessorResponse(it.id!!, it.nome) }
 
     @Operation(summary = "Lista todos os horarios cadastrados")
-    @APIResponse(responseCode = "200", description = "Lista de horarios")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Lista de horarios"),
+        APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
+        APIResponse(responseCode = "403", description = "Token sem role COORDENADOR ou ALUNO"),
+    )
     @GET
     @Path("horarios")
     fun horarios(): List<HorarioResponse> =
         horarioRepository.listAll().map { HorarioResponse(it.id!!, it.diaSemana, it.horarioInicio, it.horarioFim) }
 
     @Operation(summary = "Lista todos os cursos cadastrados")
-    @APIResponse(responseCode = "200", description = "Lista de cursos")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Lista de cursos"),
+        APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
+        APIResponse(responseCode = "403", description = "Token sem role COORDENADOR ou ALUNO"),
+    )
     @GET
     @Path("cursos")
     fun cursos(): List<CursoResponse> =

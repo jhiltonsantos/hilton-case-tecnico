@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 enum class DiaSemana { SEGUNDA, TERCA, QUARTA, QUINTA, SEXTA, SABADO }
@@ -31,5 +32,14 @@ class Horario(
         horarioInicio < LocalTime.of(12, 0) -> PeriodoDia.MANHA
         horarioInicio < LocalTime.of(18, 0) -> PeriodoDia.TARDE
         else -> PeriodoDia.NOITE
+    }
+
+    fun descricao(): String {
+        val dia = diaSemana.name.lowercase().replaceFirstChar { it.uppercase() }
+        return "$dia ${horarioInicio.format(FORMATTER)}-${horarioFim.format(FORMATTER)}"
+    }
+
+    companion object {
+        private val FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
     }
 }

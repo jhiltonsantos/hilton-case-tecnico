@@ -38,7 +38,10 @@ class AulaMatrizResource(private val aulaMatrizService: AulaMatrizService) {
     @APIResponses(
         APIResponse(responseCode = "201", description = "Aula criada"),
         APIResponse(responseCode = "404", description = "Disciplina, professor, horario ou curso inexistente"),
-        APIResponse(responseCode = "422", description = "Disciplina ja ofertada nesse horario"),
+        APIResponse(
+            responseCode = "422",
+            description = "Disciplina ja ofertada nesse horario, ou professor ja alocado em outra aula nesse horario"
+        ),
         APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
         APIResponse(responseCode = "403", description = "Token sem role COORDENADOR"),
     )
@@ -56,7 +59,11 @@ class AulaMatrizResource(private val aulaMatrizService: AulaMatrizService) {
     @APIResponses(
         APIResponse(responseCode = "200", description = "Aula editada"),
         APIResponse(responseCode = "404", description = "Aula, professor, horario ou curso inexistente"),
-        APIResponse(responseCode = "422", description = "Disciplina ja ofertada nesse horario"),
+        APIResponse(
+            responseCode = "422",
+            description = "Disciplina ja ofertada nesse horario, ou professor ja alocado em outra aula nesse horario"
+        ),
+        APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
         APIResponse(
             responseCode = "403",
             description = "Aula nao pertence a este coordenador, ou token sem role COORDENADOR"
@@ -77,7 +84,11 @@ class AulaMatrizResource(private val aulaMatrizService: AulaMatrizService) {
     @APIResponses(
         APIResponse(responseCode = "204", description = "Aula excluida (soft delete)"),
         APIResponse(responseCode = "404", description = "Aula inexistente"),
-        APIResponse(responseCode = "403", description = "Aula nao pertence a este coordenador"),
+        APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
+        APIResponse(
+            responseCode = "403",
+            description = "Aula nao pertence a este coordenador, ou token sem role COORDENADOR"
+        ),
         APIResponse(responseCode = "422", description = "Aula possui alunos matriculados"),
     )
     @DELETE
@@ -92,7 +103,11 @@ class AulaMatrizResource(private val aulaMatrizService: AulaMatrizService) {
         summary = "Lista/pesquisa aulas ativas",
         description = "Coordenador ve so as proprias aulas; aluno ve todas as aulas ativas, sem filtro de dono. Filtros opcionais combinaveis.",
     )
-    @APIResponse(responseCode = "200", description = "Lista de aulas")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Lista de aulas"),
+        APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
+        APIResponse(responseCode = "403", description = "Token sem role COORDENADOR ou ALUNO"),
+    )
     @GET
     @RolesAllowed("COORDENADOR", "ALUNO")
     fun pesquisar(
