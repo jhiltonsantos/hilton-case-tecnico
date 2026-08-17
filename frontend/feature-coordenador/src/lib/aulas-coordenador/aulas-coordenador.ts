@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TableModule } from 'primeng/table';
@@ -10,7 +10,21 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Aula, AulaService, CatalogoService, Curso, Disciplina, Horario, Professor } from '@frontend/data-access';
+import {
+  Aula,
+  AulaService,
+  CatalogoService,
+  Curso,
+  Disciplina,
+  FiltrosAula,
+  formatarHorario,
+  Horario,
+  ordenarPorHorario,
+  PERIODO_DIA_LABEL,
+  PeriodoDia,
+  Professor,
+} from '@frontend/data-access';
+import { CabecalhoPagina } from '@frontend/ui';
 
 @Component({
   selector: 'lib-aulas-coordenador',
@@ -26,6 +40,7 @@ import { Aula, AulaService, CatalogoService, Curso, Disciplina, Horario, Profess
     InputNumberModule,
     ConfirmDialogModule,
     ToastModule,
+    CabecalhoPagina,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './aulas-coordenador.html',
@@ -42,10 +57,21 @@ export class AulasCoordenador implements OnInit {
   disciplinas = signal<Disciplina[]>([]);
   professores = signal<Professor[]>([]);
   horarios = signal<Horario[]>([]);
+  horariosOptions = computed(() =>
+    this.horarios().map((h) => ({ ...h, label: formatarHorario(h) })),
+  );
   cursos = signal<Curso[]>([]);
+  aulasOrdenadas = computed(() => ordenarPorHorario(this.aulas(), this.horarios()));
 
   dialogAberto = signal(false);
   aulaEmEdicao = signal<Aula | null>(null);
+  filtrosAtivos = signal(false);
+
+  periodoDiaOptions: { label: string; value: PeriodoDia }[] = [
+    { label: PERIODO_DIA_LABEL.MANHA, value: 'MANHA' },
+    { label: PERIODO_DIA_LABEL.TARDE, value: 'TARDE' },
+    { label: PERIODO_DIA_LABEL.NOITE, value: 'NOITE' },
+  ];
 
   form = this.fb.nonNullable.group({
     disciplinaId: ['', Validators.required],
@@ -53,6 +79,14 @@ export class AulasCoordenador implements OnInit {
     horarioId: ['', Validators.required],
     cursosAutorizados: [[] as string[], Validators.required],
     vagasMaximas: [1, [Validators.required, Validators.min(1)]],
+  });
+
+  filtroForm = this.fb.nonNullable.group({
+    periodoDia: this.fb.control<PeriodoDia | ''>(''),
+    horarioInicio: [''],
+    horarioFim: [''],
+    cursoId: [''],
+    vagasMaximas: this.fb.control<number | null>(null),
   });
 
   ngOnInit(): void {
@@ -63,8 +97,51 @@ export class AulasCoordenador implements OnInit {
     this.carregarAulas();
   }
 
-  carregarAulas(): void {
-    this.aulaService.listar().subscribe((v) => this.aulas.set(v));
+  carregarAulas(filtros?: FiltrosAula): void {
+    this.aulaService.listar(filtros).subscribe((v) => this.aulas.set(v));
+  }
+
+  onPeriodoDiaChange(): void {
+    if (this.filtroForm.controls.periodoDia.value) {
+      this.filtroForm.patchValue({ horarioInicio: '', horarioFim: '' }, { emitEvent: false });
+    }
+  }
+
+  onIntervaloChange(): void {
+    const { horarioInicio, horarioFim } = this.filtroForm.getRawValue();
+    if (horarioInicio || horarioFim) {
+      this.filtroForm.patchValue({ periodoDia: '' }, { emitEvent: false });
+    }
+  }
+
+  limparHorarioInicio(): void {
+    this.filtroForm.patchValue({ horarioInicio: '' });
+  }
+
+  limparHorarioFim(): void {
+    this.filtroForm.patchValue({ horarioFim: '' });
+  }
+
+  aplicarFiltros(): void {
+    const valor = this.filtroForm.getRawValue();
+    const filtros: FiltrosAula = {};
+    if (valor.periodoDia) {
+      filtros.periodoDia = valor.periodoDia;
+    } else if (valor.horarioInicio && valor.horarioFim) {
+      filtros.horarioInicio = valor.horarioInicio;
+      filtros.horarioFim = valor.horarioFim;
+    }
+    if (valor.cursoId) filtros.cursoId = valor.cursoId;
+    if (valor.vagasMaximas != null) filtros.vagasMaximas = valor.vagasMaximas;
+
+    this.filtrosAtivos.set(Object.keys(filtros).length > 0);
+    this.carregarAulas(filtros);
+  }
+
+  limparFiltros(): void {
+    this.filtroForm.reset({ periodoDia: '', horarioInicio: '', horarioFim: '', cursoId: '', vagasMaximas: null });
+    this.filtrosAtivos.set(false);
+    this.carregarAulas();
   }
 
   nomeDisciplina(id: string): string {
@@ -77,7 +154,7 @@ export class AulasCoordenador implements OnInit {
 
   horarioLabel(id: string): string {
     const horario = this.horarios().find((h) => h.id === id);
-    return horario ? `${horario.diaSemana} ${horario.horarioInicio}-${horario.horarioFim}` : id;
+    return horario ? formatarHorario(horario) : id;
   }
 
   abrirNovaAula(): void {
@@ -128,7 +205,12 @@ export class AulasCoordenador implements OnInit {
 
   confirmarExclusao(aula: Aula): void {
     this.confirmationService.confirm({
-      message: `Excluir a aula de ${this.nomeDisciplina(aula.disciplinaId)}?`,
+      header: 'Excluir aula',
+      message: `Excluir a aula de ${this.nomeDisciplina(aula.disciplinaId)}?<br><small style="opacity: 0.7">ID: ${aula.id}</small>`,
+      acceptLabel: 'Sim',
+      rejectLabel: 'Não',
+      acceptButtonProps: { severity: 'danger' },
+      rejectButtonProps: { severity: 'secondary', text: true },
       accept: () => this.excluir(aula.id),
     });
   }

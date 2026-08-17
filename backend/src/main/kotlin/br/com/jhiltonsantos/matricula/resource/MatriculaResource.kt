@@ -13,6 +13,10 @@ import jakarta.ws.rs.core.Response
 import org.eclipse.microprofile.jwt.JsonWebToken
 import java.util.UUID
 import org.eclipse.microprofile.openapi.annotations.Operation
+import org.eclipse.microprofile.openapi.annotations.media.Content
+import org.eclipse.microprofile.openapi.annotations.media.ExampleObject
+import org.eclipse.microprofile.openapi.annotations.media.Schema
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
@@ -37,14 +41,35 @@ class MatriculaResource(
         description = "Valida curso, ausencia de problema de horario com outras matriculas ativas do aluno, e vaga disponivel.",
     )
     @APIResponses(
-        APIResponse(responseCode = "201", description = "Matricula criada"),
+        APIResponse(
+            responseCode = "201",
+            description = "Matricula criada",
+            content = [Content(schema = Schema(implementation = MatriculaResponse::class))],
+        ),
         APIResponse(responseCode = "404", description = "Aula ou aluno inexistente"),
         APIResponse(responseCode = "422", description = "Curso nao autorizado, choque de horario ou vaga indisponivel"),
         APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
         APIResponse(responseCode = "403", description = "Token sem role ALUNO"),
     )
     @POST
-    fun matricular(request: MatricularRequest): Response {
+    fun matricular(
+        @RequestBody(
+            content = [Content(
+                schema = Schema(implementation = MatricularRequest::class),
+                examples = [ExampleObject(
+                    name = "Nova matricula",
+                    summary = "Aulas nao tem id fixo no seed (sao geradas ao criar) - substitua aulaMatrizId pelo id " +
+                        "de uma aula real retornada por GET /aulas",
+                    value = """
+                        {
+                          "aulaMatrizId": "00000000-0000-0000-0000-000000000000"
+                        }
+                    """,
+                )],
+            )],
+        )
+        request: MatricularRequest,
+    ): Response {
         val matricula = matriculaService.matricular(UUID.fromString(jwt.subject), request)
         return Response.status(Response.Status.CREATED).entity(paraResponse(matricula)).build()
     }
@@ -53,7 +78,11 @@ class MatriculaResource(
         summary = "Lista as matriculas ativas do aluno logado",
         description = "Retorna disciplina, professor e horario de cada aula em que o aluno esta matriculado.",
     )
-    @APIResponse(responseCode = "200", description = "Lista de matriculas ativas")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Lista de matriculas ativas"),
+        APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
+        APIResponse(responseCode = "403", description = "Token sem role ALUNO"),
+    )
     @GET
     fun minhasMatriculas(): List<MatriculaResponse> =
         matriculaService.minhasMatriculas(UUID.fromString(jwt.subject)).map { paraResponse(it) }

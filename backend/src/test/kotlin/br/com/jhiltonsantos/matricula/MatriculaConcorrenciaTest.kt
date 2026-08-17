@@ -8,6 +8,7 @@ import br.com.jhiltonsantos.matricula.repository.HorarioRepository
 import br.com.jhiltonsantos.matricula.repository.ProfessorRepository
 import br.com.jhiltonsantos.matricula.service.AulaMatrizService
 import br.com.jhiltonsantos.matricula.service.MatriculaService
+import br.com.jhiltonsantos.matricula.support.SuporteDominio
 import io.quarkus.test.junit.QuarkusTest
 import jakarta.inject.Inject
 import jakarta.transaction.Transactional
@@ -41,6 +42,9 @@ class MatriculaConcorrenciaTest {
     @Inject
     lateinit var alunoRepository: AlunoRepository
 
+    @Inject
+    lateinit var suporteDominio: SuporteDominio
+
     // UUIDs do seed (coordenador1, aluno1, aluno2)
     private val coordenadorId = UUID.fromString("60000000-0000-0000-0000-000000000001")
     private val aluno1Id = UUID.fromString("50000000-0000-0000-0000-000000000001")
@@ -51,6 +55,8 @@ class MatriculaConcorrenciaTest {
     @BeforeEach
     @Transactional
     fun criarAulaComUmaVaga() {
+        suporteDominio.limpar()
+
         val cursoAluno1 = alunoRepository.findById(aluno1Id)!!.cursoId
         val cursoAluno2 = alunoRepository.findById(aluno2Id)!!.cursoId
 

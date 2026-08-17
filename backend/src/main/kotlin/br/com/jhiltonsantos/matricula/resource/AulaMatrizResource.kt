@@ -16,7 +16,11 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import java.time.LocalTime
 import java.util.UUID
 import org.eclipse.microprofile.openapi.annotations.Operation
+import org.eclipse.microprofile.openapi.annotations.media.Content
+import org.eclipse.microprofile.openapi.annotations.media.ExampleObject
+import org.eclipse.microprofile.openapi.annotations.media.Schema
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
@@ -36,15 +40,42 @@ class AulaMatrizResource(private val aulaMatrizService: AulaMatrizService) {
         description = "Valida a existencia de disciplina, professor, horario e cursos autorizados. O coordenador dono e extraido do token JWT, nao vai no corpo da requisicao.",
     )
     @APIResponses(
-        APIResponse(responseCode = "201", description = "Aula criada"),
+        APIResponse(
+            responseCode = "201",
+            description = "Aula criada",
+            content = [Content(schema = Schema(implementation = AulaResponse::class))],
+        ),
         APIResponse(responseCode = "404", description = "Disciplina, professor, horario ou curso inexistente"),
-        APIResponse(responseCode = "422", description = "Disciplina ja ofertada nesse horario"),
+        APIResponse(
+            responseCode = "422",
+            description = "Disciplina ja ofertada nesse horario, ou professor ja alocado em outra aula nesse horario"
+        ),
         APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
         APIResponse(responseCode = "403", description = "Token sem role COORDENADOR"),
     )
     @POST
     @RolesAllowed("COORDENADOR")
-    fun criar(request: CriarAulaRequest): Response {
+    fun criar(
+        @RequestBody(
+            content = [Content(
+                schema = Schema(implementation = CriarAulaRequest::class),
+                examples = [ExampleObject(
+                    name = "Nova aula",
+                    summary = "Calculo I com Ana Ribeiro, Segunda 08:00-10:00, para Ciencia da Computacao (IDs do seed fixo)",
+                    value = """
+                        {
+                          "disciplinaId": "10000000-0000-0000-0000-000000000001",
+                          "professorId": "20000000-0000-0000-0000-000000000001",
+                          "horarioId": "30000000-0000-0000-0000-000000000001",
+                          "cursosAutorizados": ["40000000-0000-0000-0000-000000000001"],
+                          "vagasMaximas": 30
+                        }
+                    """,
+                )],
+            )],
+        )
+        request: CriarAulaRequest,
+    ): Response {
         val aula = aulaMatrizService.criar(request, UUID.fromString(jwt.subject))
         return Response.status(Response.Status.CREATED).entity(paraResponse(aula.id!!)).build()
     }
@@ -56,7 +87,11 @@ class AulaMatrizResource(private val aulaMatrizService: AulaMatrizService) {
     @APIResponses(
         APIResponse(responseCode = "200", description = "Aula editada"),
         APIResponse(responseCode = "404", description = "Aula, professor, horario ou curso inexistente"),
-        APIResponse(responseCode = "422", description = "Disciplina ja ofertada nesse horario"),
+        APIResponse(
+            responseCode = "422",
+            description = "Disciplina ja ofertada nesse horario, ou professor ja alocado em outra aula nesse horario"
+        ),
+        APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
         APIResponse(
             responseCode = "403",
             description = "Aula nao pertence a este coordenador, ou token sem role COORDENADOR"
@@ -65,7 +100,26 @@ class AulaMatrizResource(private val aulaMatrizService: AulaMatrizService) {
     @PUT
     @Path("/{id}")
     @RolesAllowed("COORDENADOR")
-    fun editar(@PathParam("id") id: UUID, request: AtualizarAulaRequest): AulaResponse {
+    fun editar(
+        @PathParam("id") id: UUID,
+        @RequestBody(
+            content = [Content(
+                schema = Schema(implementation = AtualizarAulaRequest::class),
+                examples = [ExampleObject(
+                    name = "Editar aula",
+                    summary = "Troca para Bruno Alves, Terca 10:00-12:00, mantendo Ciencia da Computacao (IDs do seed fixo)",
+                    value = """
+                        {
+                          "professorId": "20000000-0000-0000-0000-000000000002",
+                          "horarioId": "30000000-0000-0000-0000-000000000003",
+                          "cursosAutorizados": ["40000000-0000-0000-0000-000000000001"]
+                        }
+                    """,
+                )],
+            )],
+        )
+        request: AtualizarAulaRequest,
+    ): AulaResponse {
         aulaMatrizService.editar(id, UUID.fromString(jwt.subject), request)
         return paraResponse(id)
     }
@@ -77,7 +131,11 @@ class AulaMatrizResource(private val aulaMatrizService: AulaMatrizService) {
     @APIResponses(
         APIResponse(responseCode = "204", description = "Aula excluida (soft delete)"),
         APIResponse(responseCode = "404", description = "Aula inexistente"),
-        APIResponse(responseCode = "403", description = "Aula nao pertence a este coordenador"),
+        APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
+        APIResponse(
+            responseCode = "403",
+            description = "Aula nao pertence a este coordenador, ou token sem role COORDENADOR"
+        ),
         APIResponse(responseCode = "422", description = "Aula possui alunos matriculados"),
     )
     @DELETE
@@ -92,7 +150,11 @@ class AulaMatrizResource(private val aulaMatrizService: AulaMatrizService) {
         summary = "Lista/pesquisa aulas ativas",
         description = "Coordenador ve so as proprias aulas; aluno ve todas as aulas ativas, sem filtro de dono. Filtros opcionais combinaveis.",
     )
-    @APIResponse(responseCode = "200", description = "Lista de aulas")
+    @APIResponses(
+        APIResponse(responseCode = "200", description = "Lista de aulas"),
+        APIResponse(responseCode = "401", description = "Requisicao sem token valido"),
+        APIResponse(responseCode = "403", description = "Token sem role COORDENADOR ou ALUNO"),
+    )
     @GET
     @RolesAllowed("COORDENADOR", "ALUNO")
     fun pesquisar(

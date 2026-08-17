@@ -1,0 +1,259 @@
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --brand-serif: 'Newsreader', 'Georgia', serif;
+  --brand-sans: 'Inter', 'Segoe UI', sans-serif;
+  --brand-gold: #d9a441;
+  --brand-gold-soft: rgba(217, 164, 65, 0.16);
+  --brand-gold-text: #241a04;
+  --brand-ink: #eef1f5;
+  --brand-muted: #9aa3b2;
+  --brand-bg: #12151a;
+  --brand-surface: #1b1f27;
+  --brand-border: rgba(255, 255, 255, 0.08);
+
+  /* PatternFly v5 global tokens - sobrescreve o que o keycloak.v2 expõe */
+  --pf-v5-global--BackgroundColor--100: var(--brand-bg);
+  --pf-v5-global--BackgroundColor--200: var(--brand-surface);
+  --pf-v5-global--BackgroundColor--dark-100: var(--brand-bg);
+  --pf-v5-global--Color--100: var(--brand-ink);
+  --pf-v5-global--Color--200: var(--brand-muted);
+  --pf-v5-global--Color--light-100: var(--brand-ink);
+  --pf-v5-global--primary-color--100: var(--brand-gold);
+  --pf-v5-global--primary-color--200: var(--brand-gold);
+  --pf-v5-global--link--Color: var(--brand-gold);
+  --pf-v5-global--link--Color--hover: var(--brand-gold);
+  --pf-v5-global--BorderColor--100: var(--brand-border);
+  --pf-v5-global--BorderColor--200: var(--brand-border);
+  --pf-v5-global--FontFamily--sans-serif: var(--brand-sans);
+  --pf-v5-global--FontFamily--heading--sans-serif: var(--brand-serif);
+}
+
+.pf-v5-c-login {
+  --pf-v5-c-login__main--BackgroundColor: var(--brand-surface);
+  --pf-v5-c-login__main--BoxShadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6);
+  --pf-v5-c-login__main-header--PaddingTop: 0;
+  --pf-v5-c-login__main-header--PaddingBottom: 0;
+  --pf-v5-c-login__main-header--PaddingLeft: 2.25rem;
+  --pf-v5-c-login__main-header--PaddingRight: 2.25rem;
+  --pf-v5-c-login__main-body--PaddingBottom: 2.5rem;
+  --pf-v5-c-login__main-body--PaddingLeft: 2.25rem;
+  --pf-v5-c-login__main-body--PaddingRight: 2.25rem;
+  /* O PatternFly aplica uma margem grande (3rem no breakpoint xl) embaixo do
+     brand via `.pf-v5-c-login__header .pf-v5-c-brand` - seletor mais
+     especifico que `.pf-v5-c-brand` sozinho, entao só um `margin-bottom: 0`
+     direto na classe não vencia. Zerando aqui, na mesma variavel. */
+  --pf-v5-c-login__header--c-brand--MarginBottom: 0;
+  --pf-v5-c-login__header--c-brand--xl--MarginBottom: 0;
+}
+
+html,
+body {
+  background-color: var(--brand-bg) !important;
+  color: var(--brand-ink);
+  font-family: var(--brand-sans);
+}
+
+/* Neutraliza o padrao poligonal default do PatternFly (background-image component) */
+.pf-v5-c-background-image,
+.pf-v5-c-background-image::before,
+.pf-v5-c-background-image::after {
+  background-image: none !important;
+  background-color: var(--brand-bg) !important;
+}
+
+.pf-v5-c-login,
+.pf-v5-c-login__container {
+  background-color: var(--brand-bg);
+  font-family: var(--brand-sans);
+}
+
+/* Layout padrao do PatternFly reserva uma segunda coluna pro brand/header ao lado
+   do card (pensado pra sentar em cima da imagem de fundo default). O app usa um
+   card unico centralizado, entao colapsa pra uma coluna so, com o brand acima. */
+.pf-v5-c-login__container {
+  grid-template-columns: minmax(0, 544px) !important;
+  grid-template-areas: 'header' 'main' 'footer' !important;
+  justify-items: center;
+  justify-content: center;
+  row-gap: 0;
+}
+
+.pf-v5-c-login__header,
+.pf-v5-c-login__main-header,
+.pf-v5-c-brand {
+  color: var(--brand-ink);
+}
+
+.pf-v5-c-login__header {
+  width: 26rem;
+  box-sizing: border-box;
+  text-align: left;
+  margin-bottom: 0;
+  padding: 2.5rem 2.25rem 0.15rem;
+  background-color: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+}
+
+.pf-v5-c-brand {
+  display: block;
+  margin-bottom: 0;
+  color: var(--brand-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 600;
+  font-size: 0.7rem;
+  font-family: var(--brand-sans);
+}
+
+.pf-v5-c-login__main {
+  width: 26rem;
+  border: 1px solid var(--brand-border);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+}
+
+.pf-v5-c-login__main-body,
+.pf-v5-c-card {
+  color: var(--brand-ink);
+}
+
+.pf-v5-c-login__main-body {
+  padding-top: 1.75rem;
+}
+
+.pf-v5-c-title,
+.pf-v5-c-login__main-header .pf-v5-c-title,
+h1,
+h2,
+h3 {
+  font-family: var(--brand-serif);
+  color: var(--brand-ink);
+  font-weight: 600;
+  font-size: 1.6rem;
+}
+
+.pf-v5-c-login__main-header .pf-v5-c-title {
+  margin: 0;
+  border-bottom: 1px solid var(--brand-border);
+  padding-bottom: 1.5rem;
+}
+
+label,
+.pf-v5-c-form__label,
+.pf-v5-c-form__label-text,
+.pf-v5-c-check__label {
+  color: var(--brand-muted);
+  font-family: var(--brand-sans);
+}
+
+.pf-v5-c-form-control {
+  background-color: var(--brand-bg);
+  border: 1px solid var(--brand-border);
+  border-radius: 8px;
+}
+
+.pf-v5-c-form-control input,
+input[type='text'],
+input[type='email'],
+input[type='password'] {
+  background-color: transparent;
+  border: none;
+  color: var(--brand-ink);
+}
+
+.pf-v5-c-form-control:has(input:focus) {
+  border-color: var(--brand-gold);
+  box-shadow: 0 0 0 1px var(--brand-gold);
+}
+
+.pf-v5-c-form-control::before,
+.pf-v5-c-form-control::after {
+  display: none;
+}
+
+.pf-v5-c-input-group {
+  display: flex;
+  align-items: stretch;
+  background-color: var(--brand-bg);
+  border: 1px solid var(--brand-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pf-v5-c-input-group:has(input:focus) {
+  border-color: var(--brand-gold);
+  box-shadow: 0 0 0 1px var(--brand-gold);
+}
+
+.pf-v5-c-input-group .pf-v5-c-form-control {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  flex: 1;
+}
+
+.pf-v5-c-input-group .pf-v5-c-button.pf-m-control {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--brand-muted);
+  padding: 0 0.75rem;
+}
+
+.pf-v5-c-input-group .pf-v5-c-button.pf-m-control:hover {
+  color: var(--brand-gold);
+}
+
+a,
+.pf-v5-c-login__main-footer-links-item-link {
+  color: var(--brand-gold);
+}
+
+a:hover {
+  filter: brightness(1.1);
+}
+
+.pf-v5-c-button.pf-m-primary,
+button[type='submit'],
+.pf-v5-c-button.pf-m-secondary,
+#kc-back-to-app {
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  font-family: var(--brand-sans);
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition: filter 0.15s ease;
+}
+
+.pf-v5-c-button.pf-m-primary:hover,
+button[type='submit']:hover,
+.pf-v5-c-button.pf-m-secondary:hover,
+#kc-back-to-app:hover {
+  filter: brightness(1.08);
+}
+
+/* Botao primario (Entrar) */
+.pf-v5-c-button.pf-m-primary,
+button[type='submit'] {
+  background-color: var(--brand-gold) !important;
+  color: var(--brand-gold-text) !important;
+  border: none;
+}
+
+/* Botao secundario (Voltar) */
+.pf-v5-c-button.pf-m-secondary,
+#kc-back-to-app {
+  background-color: transparent !important;
+  color: var(--brand-muted) !important;
+  border: 1px solid var(--brand-border) !important;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.75rem;
+}

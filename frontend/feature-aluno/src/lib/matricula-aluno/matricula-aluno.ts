@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -14,15 +14,18 @@ import {
   Aula,
   Curso,
   Disciplina,
+  formatarHorario,
   Horario,
   Matricula,
+  ordenarPorHorario,
   Professor,
 } from '@frontend/data-access';
+import { CabecalhoPagina } from '@frontend/ui';
 
 @Component({
   selector: 'lib-matricula-aluno',
   standalone: true,
-  imports: [CommonModule, TableModule, ButtonModule, TagModule, ToastModule],
+  imports: [CommonModule, TableModule, ButtonModule, TagModule, ToastModule, CabecalhoPagina],
   providers: [MessageService],
   templateUrl: './matricula-aluno.html',
   styleUrl: './matricula-aluno.scss',
@@ -44,6 +47,9 @@ export class MatriculaAluno implements OnInit {
   aulasDisponiveis = signal<Aula[]>([]);
   minhasMatriculas = signal<Matricula[]>([]);
   matriculando = signal<string | null>(null);
+
+  aulasDisponiveisOrdenadas = computed(() => ordenarPorHorario(this.aulasDisponiveis(), this.horarios()));
+  minhasMatriculasOrdenadas = computed(() => ordenarPorHorario(this.minhasMatriculas(), this.horarios()));
 
   ngOnInit(): void {
     this.catalogoService.disciplinas().subscribe((v) => this.disciplinas.set(v));
@@ -100,6 +106,6 @@ export class MatriculaAluno implements OnInit {
 
   horarioLabel(id: string): string {
     const horario = this.horarios().find((h) => h.id === id);
-    return horario ? `${horario.diaSemana} ${horario.horarioInicio}-${horario.horarioFim}` : id;
+    return horario ? formatarHorario(horario) : id;
   }
 }

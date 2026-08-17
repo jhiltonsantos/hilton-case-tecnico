@@ -8,6 +8,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
+import { API_BASE_URL } from '@frontend/data-access';
 
 const MatriculaPreset = definePreset(Aura, {
   semantic: {
@@ -49,7 +50,25 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideAnimationsAsync(),
-    providePrimeNG({ theme: { preset: MatriculaPreset } }),
+    providePrimeNG({
+      theme: { preset: MatriculaPreset },
+      translation: {
+        emptyMessage: 'Nenhum resultado encontrado',
+        emptyFilterMessage: 'Nenhum resultado encontrado',
+        selectionMessage: '{0} itens selecionados',
+        emptySelectionMessage: 'Nenhum item selecionado',
+        clear: 'Limpar',
+        apply: 'Aplicar',
+        accept: 'Sim',
+        reject: 'Não',
+        aria: {
+          selectAll: 'Selecionar todos',
+          unselectAll: 'Limpar seleção',
+          close: 'Fechar',
+        },
+      },
+    }),
+    { provide: API_BASE_URL, useValue: 'http://localhost:8080' },
     provideKeycloak({
       config: {
         url: 'http://localhost:8081',
