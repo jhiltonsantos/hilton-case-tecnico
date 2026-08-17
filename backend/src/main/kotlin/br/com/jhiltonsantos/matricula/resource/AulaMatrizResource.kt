@@ -17,8 +17,10 @@ import java.time.LocalTime
 import java.util.UUID
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.media.Content
+import org.eclipse.microprofile.openapi.annotations.media.ExampleObject
 import org.eclipse.microprofile.openapi.annotations.media.Schema
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
@@ -53,7 +55,27 @@ class AulaMatrizResource(private val aulaMatrizService: AulaMatrizService) {
     )
     @POST
     @RolesAllowed("COORDENADOR")
-    fun criar(request: CriarAulaRequest): Response {
+    fun criar(
+        @RequestBody(
+            content = [Content(
+                schema = Schema(implementation = CriarAulaRequest::class),
+                examples = [ExampleObject(
+                    name = "Nova aula",
+                    summary = "Calculo I com Ana Ribeiro, Segunda 08:00-10:00, para Ciencia da Computacao (IDs do seed fixo)",
+                    value = """
+                        {
+                          "disciplinaId": "10000000-0000-0000-0000-000000000001",
+                          "professorId": "20000000-0000-0000-0000-000000000001",
+                          "horarioId": "30000000-0000-0000-0000-000000000001",
+                          "cursosAutorizados": ["40000000-0000-0000-0000-000000000001"],
+                          "vagasMaximas": 30
+                        }
+                    """,
+                )],
+            )],
+        )
+        request: CriarAulaRequest,
+    ): Response {
         val aula = aulaMatrizService.criar(request, UUID.fromString(jwt.subject))
         return Response.status(Response.Status.CREATED).entity(paraResponse(aula.id!!)).build()
     }
@@ -78,7 +100,26 @@ class AulaMatrizResource(private val aulaMatrizService: AulaMatrizService) {
     @PUT
     @Path("/{id}")
     @RolesAllowed("COORDENADOR")
-    fun editar(@PathParam("id") id: UUID, request: AtualizarAulaRequest): AulaResponse {
+    fun editar(
+        @PathParam("id") id: UUID,
+        @RequestBody(
+            content = [Content(
+                schema = Schema(implementation = AtualizarAulaRequest::class),
+                examples = [ExampleObject(
+                    name = "Editar aula",
+                    summary = "Troca para Bruno Alves, Terca 10:00-12:00, mantendo Ciencia da Computacao (IDs do seed fixo)",
+                    value = """
+                        {
+                          "professorId": "20000000-0000-0000-0000-000000000002",
+                          "horarioId": "30000000-0000-0000-0000-000000000003",
+                          "cursosAutorizados": ["40000000-0000-0000-0000-000000000001"]
+                        }
+                    """,
+                )],
+            )],
+        )
+        request: AtualizarAulaRequest,
+    ): AulaResponse {
         aulaMatrizService.editar(id, UUID.fromString(jwt.subject), request)
         return paraResponse(id)
     }

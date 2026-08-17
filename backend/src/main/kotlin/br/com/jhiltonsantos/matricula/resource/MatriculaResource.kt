@@ -14,7 +14,9 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import java.util.UUID
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.media.Content
+import org.eclipse.microprofile.openapi.annotations.media.ExampleObject
 import org.eclipse.microprofile.openapi.annotations.media.Schema
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
@@ -50,7 +52,24 @@ class MatriculaResource(
         APIResponse(responseCode = "403", description = "Token sem role ALUNO"),
     )
     @POST
-    fun matricular(request: MatricularRequest): Response {
+    fun matricular(
+        @RequestBody(
+            content = [Content(
+                schema = Schema(implementation = MatricularRequest::class),
+                examples = [ExampleObject(
+                    name = "Nova matricula",
+                    summary = "Aulas nao tem id fixo no seed (sao geradas ao criar) - substitua aulaMatrizId pelo id " +
+                        "de uma aula real retornada por GET /aulas",
+                    value = """
+                        {
+                          "aulaMatrizId": "00000000-0000-0000-0000-000000000000"
+                        }
+                    """,
+                )],
+            )],
+        )
+        request: MatricularRequest,
+    ): Response {
         val matricula = matriculaService.matricular(UUID.fromString(jwt.subject), request)
         return Response.status(Response.Status.CREATED).entity(paraResponse(matricula)).build()
     }
